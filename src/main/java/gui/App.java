@@ -9,6 +9,16 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 public class App extends Application {
+
+
+    // GUI properties
+    final int windowWidth = 1200;
+    final int windowHeight = 800;
+
+    // Elements
+    BokuBoard board;
+    // TODO: control panel, info board, console, ...
+
     public static void main(String[] args) {
         launch(args);
     }
