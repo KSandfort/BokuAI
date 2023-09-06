@@ -13,9 +13,18 @@ public class HexagonShape extends Polygon {
             -0.5, -1.2247
     };
 
-    public HexagonShape() {
+    public HexagonShape(double centerX, double centerY, double radius) {
         super();
-        this.getPoints().addAll(hexagonUnitCoordinates);
+        double stretchX = radius;
+        double stretchY = stretchX * (Math.sqrt(1.5));
+        for (int i = 0; i < hexagonUnitCoordinates.length; i++) {
+            if (i % 2 == 0) {
+                this.getPoints().add(centerX + (hexagonUnitCoordinates[i] * stretchX));
+            }
+            else {
+                this.getPoints().add(centerY + (hexagonUnitCoordinates[i] * stretchX * 0.75));
+            }
+        }
     }
 
 }
