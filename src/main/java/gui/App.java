@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -14,6 +15,8 @@ public class App extends Application {
     // GUI properties
     final int windowWidth = 1200;
     final int windowHeight = 800;
+    final int boardWidth = 500;
+    final int boardHeight = 500;
 
     // Elements
     BokuBoard board;
@@ -25,7 +28,14 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("Hello World!");
+
+        // Window properties
+        primaryStage.setTitle("Boku");
+        primaryStage.setResizable(false);
+
+        // Layout
+        BorderPane root = new BorderPane();
+
         Button btn = new Button();
         btn.setText("Say 'Hello World'");
         btn.setOnAction(new EventHandler<ActionEvent>() {
@@ -36,9 +46,12 @@ public class App extends Application {
             }
         });
 
-        StackPane root = new StackPane();
-        root.getChildren().add(btn);
-        primaryStage.setScene(new Scene(root, 300, 250));
+        board = new BokuBoard(boardWidth,  boardHeight);
+
+        root.setCenter(board);
+        root.setBottom(btn);
+
+        primaryStage.setScene(new Scene(root, windowWidth, windowHeight));
         primaryStage.show();
     }
 }
