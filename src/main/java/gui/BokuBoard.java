@@ -13,6 +13,7 @@ import java.util.List;
 public class BokuBoard extends Pane {
 
     double middle;
+    double yOffset = -40;
     final double spreadX = 33;
     final double spreadY = spreadX * (Math.sqrt(1.5) / 2);
     List<HexagonShape> hexagonShapes = new ArrayList<>();
@@ -30,10 +31,14 @@ public class BokuBoard extends Pane {
         for (int i = 0; i < 10; i++) { // For letter indices (A-J)
             for (int j = 0; j < 10; j++) { // For number indices (1-10)
                 if (j < i + 6 && i < j + 6) {
-                    HexagonShape hs = new HexagonShape(middle + spreadX * (i - j), middle * 1.9 + spreadY * (-i - j), 20);
+                    HexagonShape hs = new HexagonShape(
+                            middle + spreadX * (i - j),
+                            middle * 1.9 + spreadY * (-i - j) + yOffset,
+                            20);
                     // Change style on hover
                     hs.setOnMouseEntered(e -> hs.setFill(Color.WHITE));
                     hs.setOnMouseExited(e -> hs.setFill(Color.BLACK));
+                    // on click
                     this.getChildren().add(hs);
                 }
             }

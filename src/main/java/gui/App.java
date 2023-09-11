@@ -3,10 +3,15 @@ package gui;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class App extends Application {
@@ -20,6 +25,16 @@ public class App extends Application {
 
     // Elements
     BokuBoard board;
+    VBox controlPanel = new VBox();
+    Button startPauseButton = new Button("Start Game");
+    Button resetButton = new Button("Reset Game");
+    Button undoMoveButton = new Button("Undo Last Move");
+
+    HBox infoPanel = new HBox();
+    Label totalTimeElapsedLabel = new Label("00:00");
+    VBox statsPanel = new VBox();
+    TextArea moveHistoryField = new TextArea("History of all moves");
+
     // TODO: control panel, info board, console, ...
 
     public static void main(String[] args) {
@@ -48,7 +63,33 @@ public class App extends Application {
 
         board = new BokuBoard(boardWidth,  boardHeight);
 
+        // Info Panel Setup
+        infoPanel.setAlignment(Pos.CENTER);
+        infoPanel.setPadding(new Insets(20, 20, 20, 20));
+        infoPanel.setSpacing(20);
+        infoPanel.getChildren().add(totalTimeElapsedLabel);
+
+        // Control Panel Setup
+        controlPanel.setAlignment(Pos.CENTER);
+        controlPanel.setPadding(new Insets(20, 20, 20, 20));
+        controlPanel.setSpacing(20);
+        controlPanel.getChildren().add(startPauseButton);
+        controlPanel.getChildren().add(resetButton);
+        controlPanel.getChildren().add(undoMoveButton);
+
+        // Stats Panel Setup
+        statsPanel.setAlignment(Pos.CENTER);
+        statsPanel.setPadding(new Insets(20, 20, 20, 20));
+        statsPanel.setSpacing(20);
+        statsPanel.getChildren().add(moveHistoryField);
+        moveHistoryField.setEditable(false);
+        moveHistoryField.setPrefColumnCount(20);
+
+        // Root Panel Setup
         root.setCenter(board);
+        root.setTop(infoPanel);
+        root.setLeft(controlPanel);
+        root.setRight(statsPanel);
         root.setBottom(btn);
 
         primaryStage.setScene(new Scene(root, windowWidth, windowHeight));
