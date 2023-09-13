@@ -1,5 +1,6 @@
 package gui;
 
+import engine.GameController;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import lombok.Getter;
@@ -16,12 +17,16 @@ public class BokuBoard extends Pane {
     double yOffset = -40;
     final double spreadX = 33;
     final double spreadY = spreadX * (Math.sqrt(1.5) / 2);
-    List<HexagonShape> hexagonShapes = new ArrayList<>();
+    List<Hexagon> hexagons = new ArrayList<>();
+    private GameController gameController;
 
-    public BokuBoard(double width, double height) {
+    public BokuBoard(double width, double height, GameController gameController) {
         super();
+        // Set dimensions
         this.setMaxWidth(width);
         this.setMaxHeight(height);
+        // Assign current game controller
+        this.gameController = gameController;
         middle = width/2;
         this.setStyle("-fx-background-color: blue");
         placeHexagons();
@@ -31,13 +36,15 @@ public class BokuBoard extends Pane {
         for (int i = 0; i < 10; i++) { // For letter indices (A-J)
             for (int j = 0; j < 10; j++) { // For number indices (1-10)
                 if (j < i + 6 && i < j + 6) {
-                    HexagonShape hs = new HexagonShape(
+                    Hexagon hs = new Hexagon(
                             middle + spreadX * (i - j),
                             middle * 1.9 + spreadY * (-i - j) + yOffset,
-                            20);
+                            20,
+                            new int[1]);
                     // Change style on hover
                     hs.setOnMouseEntered(e -> hs.setFill(Color.WHITE));
                     hs.setOnMouseExited(e -> hs.setFill(Color.BLACK));
+                    hs.setOnMouseClicked(e -> gameController.attemptMoveOnClick(this, hs.getCoordinate()));
                     // on click
                     this.getChildren().add(hs);
                 }

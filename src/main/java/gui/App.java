@@ -1,5 +1,6 @@
 package gui;
 
+import engine.GameController;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -16,6 +17,8 @@ import javafx.stage.Stage;
 
 public class App extends Application {
 
+    // Engine
+    GameController gameController = new GameController();
 
     // GUI properties
     final int windowWidth = 1200;
@@ -61,7 +64,7 @@ public class App extends Application {
             }
         });
 
-        board = new BokuBoard(boardWidth,  boardHeight);
+        board = new BokuBoard(boardWidth,  boardHeight, gameController);
 
         // Info Panel Setup
         infoPanel.setAlignment(Pos.CENTER);

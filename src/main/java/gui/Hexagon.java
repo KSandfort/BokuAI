@@ -1,8 +1,14 @@
 package gui;
 
 import javafx.scene.shape.Polygon;
+import lombok.Getter;
+import lombok.Setter;
 
-public class HexagonShape extends Polygon {
+@Getter
+@Setter
+public class Hexagon extends Polygon {
+
+    private int[] coordinate;
     Polygon polygon = new Polygon();
     Double[] hexagonUnitCoordinates = new Double[]{
             -1.0, 0.0,
@@ -13,16 +19,15 @@ public class HexagonShape extends Polygon {
             -0.5, -1.2247
     };
 
-    public HexagonShape(double centerX, double centerY, double radius) {
+    public Hexagon(double centerX, double centerY, double radius, int[] coordinate) {
         super();
-        double stretchX = radius;
-        double stretchY = stretchX * (Math.sqrt(1.5));
+        this.coordinate = coordinate;
         for (int i = 0; i < hexagonUnitCoordinates.length; i++) {
             if (i % 2 == 0) {
-                this.getPoints().add(centerX + (hexagonUnitCoordinates[i] * stretchX));
+                this.getPoints().add(centerX + (hexagonUnitCoordinates[i] * radius));
             }
             else {
-                this.getPoints().add(centerY + (hexagonUnitCoordinates[i] * stretchX * 0.75));
+                this.getPoints().add(centerY + (hexagonUnitCoordinates[i] * (radius * 0.75)));
             }
         }
     }
