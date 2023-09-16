@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 public class Hexagon extends Polygon {
 
-    private int[] coordinate;
+    private int coordinateIndex;
     Polygon polygon = new Polygon();
     Double[] hexagonUnitCoordinates = new Double[]{
             -1.0, 0.0,
@@ -19,9 +19,9 @@ public class Hexagon extends Polygon {
             -0.5, -1.2247
     };
 
-    public Hexagon(double centerX, double centerY, double radius, int[] coordinate) {
+    public Hexagon(double centerX, double centerY, double radius, int coordinateIndex) {
         super();
-        this.coordinate = coordinate;
+        this.coordinateIndex = coordinateIndex;
         for (int i = 0; i < hexagonUnitCoordinates.length; i++) {
             if (i % 2 == 0) {
                 this.getPoints().add(centerX + (hexagonUnitCoordinates[i] * radius));

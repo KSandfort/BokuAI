@@ -3,6 +3,9 @@ package engine;
 import agent.Player;
 import gui.BokuBoard;
 
+import java.math.BigInteger;
+import java.util.Arrays;
+
 public class GameController {
 
     // State properties
@@ -15,7 +18,9 @@ public class GameController {
     private BoardState boardState = new BoardState();
 
     public GameController() {
-
+        BigInteger boardTest = new BigInteger("0101");
+        System.out.println(boardTest);
+        System.out.println(boardTest.toString(2));
     }
 
     private void initNewGame(Player player1, Player player2) {
@@ -34,9 +39,9 @@ public class GameController {
     /**
      * Attempts to make a move when a human player clicks a tile to place a stone
      */
-    public void attemptMoveOnClick(BokuBoard board, int[] coordinate) {
+    public void attemptMoveOnClick(BokuBoard board, int coordinateIndex) {
         // If all conditions are met
-
+        System.out.printf("Position Index: %s\n", coordinateIndex);
     }
 
     public void executeMove() {
