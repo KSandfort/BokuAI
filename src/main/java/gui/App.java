@@ -35,6 +35,7 @@ public class App extends Application {
 
     HBox infoPanel = new HBox();
     Label totalTimeElapsedLabel = new Label("00:00");
+    Label whoToTurnLabel = new Label("Game not started yet");
     VBox statsPanel = new VBox();
     TextArea moveHistoryField = new TextArea("History of all moves");
 
@@ -71,6 +72,7 @@ public class App extends Application {
         infoPanel.setPadding(new Insets(20, 20, 20, 20));
         infoPanel.setSpacing(20);
         infoPanel.getChildren().add(totalTimeElapsedLabel);
+        infoPanel.getChildren().add(whoToTurnLabel);
 
         // Control Panel Setup
         controlPanel.setAlignment(Pos.CENTER);
@@ -79,6 +81,8 @@ public class App extends Application {
         controlPanel.getChildren().add(startPauseButton);
         controlPanel.getChildren().add(resetButton);
         controlPanel.getChildren().add(undoMoveButton);
+
+        startPauseButton.setOnAction(e -> gameController.startGame());
 
         // Stats Panel Setup
         statsPanel.setAlignment(Pos.CENTER);

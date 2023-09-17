@@ -1,12 +1,21 @@
 package engine;
 
+import lombok.Getter;
+import lombok.Setter;
+
+import java.math.BigInteger;
 import java.util.List;
 
+@Getter
+@Setter
 public class BoardState {
-    private int[][] field; // First dimension: Numbers representing A-J
 
-    public BoardState() {
-        field = new int[10][10];
+    private BigInteger whitePieces;
+    private BigInteger blackPieces;
+
+    public BoardState(BigInteger whiteP, BigInteger blackP) {
+        this.whitePieces = whiteP;
+        this.blackPieces = blackP;
     }
 
     private boolean isAdjacent(int x1, int y1, int x2, int y2) {
