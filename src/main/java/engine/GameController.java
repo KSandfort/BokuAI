@@ -2,6 +2,7 @@ package engine;
 
 import agent.Player;
 import gui.BokuBoard;
+import javafx.scene.paint.Color;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,6 +16,8 @@ import java.util.List;
 public class GameController {
 
     private static boolean DEBUG_LOG = true;
+
+    BokuBoard bokuBoard;
 
     // State properties
     private int gameState; // 0 = pause, 1 = player 1 to move, 2 = player 2 to move, 3 = player 1 won, 4 = player 2 won
@@ -95,9 +98,17 @@ public class GameController {
             System.out.println("Board state (B): " + (newBoardState.getBlackPieces()).toString(2));
         }
         boardStateHistory.add(boardState);
-        togglePlayerTurn();
-        // Update GUI
 
+        // Update GUI
+        if (this.gameState == 1) {
+            bokuBoard.getHexagons().get(coordinateIndex).setFill(Color.WHITE);
+        }
+        else if (this.gameState == 2) {
+            bokuBoard.getHexagons().get(coordinateIndex).setFill(Color.BLACK);
+        }
+
+        // Toggle Player Turn
+        togglePlayerTurn();
     }
 
     private void togglePlayerTurn() {

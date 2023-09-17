@@ -1,5 +1,6 @@
 package gui;
 
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,6 +31,7 @@ public class Hexagon extends Polygon {
                 this.getPoints().add(centerY + (hexagonUnitCoordinates[i] * (radius * 0.75)));
             }
         }
+        this.setFill(Color.GRAY);
     }
 
 }

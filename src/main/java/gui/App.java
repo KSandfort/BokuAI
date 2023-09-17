@@ -66,6 +66,7 @@ public class App extends Application {
         });
 
         board = new BokuBoard(boardWidth,  boardHeight, gameController);
+        gameController.setBokuBoard(board);
 
         // Info Panel Setup
         infoPanel.setAlignment(Pos.CENTER);

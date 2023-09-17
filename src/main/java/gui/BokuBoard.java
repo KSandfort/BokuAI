@@ -42,10 +42,11 @@ public class BokuBoard extends Pane {
                             20,
                             (j*10) + i);
                     // Change style on hover
-                    hs.setOnMouseEntered(e -> hs.setFill(Color.WHITE));
-                    hs.setOnMouseExited(e -> hs.setFill(Color.BLACK));
+                    // hs.setOnMouseEntered(e -> hs.setFill(Color.RED));
+                    // hs.setOnMouseExited(e -> hs.setFill(Color.GRAY));
                     hs.setOnMouseClicked(e -> gameController.attemptMoveOnClick(this, hs.getCoordinateIndex()));
                     // on click
+                    hexagons.add(hs);
                     this.getChildren().add(hs);
                 }
             }
