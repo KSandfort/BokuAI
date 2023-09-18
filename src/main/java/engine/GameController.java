@@ -2,6 +2,7 @@ package engine;
 
 import agent.Player;
 import gui.BokuBoard;
+import gui.Hexagon;
 import javafx.scene.paint.Color;
 import lombok.Getter;
 import lombok.Setter;
@@ -64,7 +65,7 @@ public class GameController {
     public void attemptMoveOnClick(BokuBoard board, int coordinateIndex) {
         // If all conditions are met
         if (DEBUG_LOG) {
-            System.out.printf("Position Index: %s\n", coordinateIndex);
+            System.out.printf("Index of attempted move: %s\n", coordinateIndex);
         }
         executeMove(coordinateIndex);
     }
@@ -75,13 +76,11 @@ public class GameController {
         BigInteger toAdd = new BigInteger(binaryCoordinate, 2);
         BoardState newBoardState;
         if (this.gameState == 1) {
-            System.out.println("Yes");
             newBoardState = new BoardState(
                     this.boardState.getWhitePieces().add(toAdd),
                     this.boardState.getBlackPieces());
         }
         else if (this.gameState == 2) {
-            System.out.println("Yesyes");
             newBoardState = new BoardState(
                     this.boardState.getWhitePieces(),
                     this.boardState.getBlackPieces().add(toAdd));
@@ -100,12 +99,18 @@ public class GameController {
         boardStateHistory.add(boardState);
 
         // Update GUI
-        if (this.gameState == 1) {
-            bokuBoard.getHexagons().get(coordinateIndex).setFill(Color.WHITE);
+
+        for (Hexagon hg : bokuBoard.getHexagons()) {
+            if (hg.getCoordinateIndex() == coordinateIndex) {
+                if (this.gameState == 1) {
+                    hg.setFill(Color.WHITE);
+                }
+                else if (this.gameState == 2) {
+                    hg.setFill(Color.BLACK);
+                }
+            }
         }
-        else if (this.gameState == 2) {
-            bokuBoard.getHexagons().get(coordinateIndex).setFill(Color.BLACK);
-        }
+
 
         // Toggle Player Turn
         togglePlayerTurn();
