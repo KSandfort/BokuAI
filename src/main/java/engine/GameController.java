@@ -9,7 +9,6 @@ import lombok.Setter;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Getter
@@ -32,26 +31,27 @@ public class GameController {
     private List<BoardState> boardStateHistory;
 
     public GameController() {
-        gameState = 1; //Todo: Remove later
-        boardStateHistory = new ArrayList<>();
-        boardState = new BoardState(new BigInteger("0"), new BigInteger("0"));
+        this.gameState = 0; //Todo: Remove later
+        this.boardStateHistory = new ArrayList<>();
         // BigInteger boardTest = new BigInteger("0101");
         // System.out.println(boardTest);
         // System.out.println(boardTest.toString(2));
+    }
+
+    public void initNewGame(Player player1, Player player2) {
+        gameState = 1;
+        moveCount = 0;
+        whiteToTurn = true;
+        this.boardState = new BoardState(new BigInteger("0"), new BigInteger("0"));
+        this.player1 = player1;
+        this.player2 = player2;
+        this.startGame();
     }
 
     public void startGame() {
         if (DEBUG_LOG) {
             System.out.println("Starting game");
         }
-    }
-
-    private void initNewGame(Player player1, Player player2) {
-        gameState = 1;
-        moveCount = 0;
-        whiteToTurn = true;
-        this.player1 = player1;
-        this.player2 = player2;
     }
 
     public void setPlayers(Player player1, Player player2) {
@@ -64,10 +64,18 @@ public class GameController {
      */
     public void attemptMoveOnClick(BokuBoard board, int coordinateIndex) {
         // If all conditions are met
+        boolean rejectMove = false; // Flag to tell whether an attempted move should be rejected
+        // Check game state
+        if (this.gameState == 0) {
+            rejectMove = true;
+        }
+
         if (DEBUG_LOG) {
             System.out.printf("Index of attempted move: %s\n", coordinateIndex);
         }
-        executeMove(coordinateIndex);
+        if (!rejectMove) {
+            executeMove(coordinateIndex);
+        }
     }
 
     public void executeMove(int coordinateIndex) {
@@ -103,11 +111,12 @@ public class GameController {
         for (Hexagon hg : bokuBoard.getHexagons()) {
             if (hg.getCoordinateIndex() == coordinateIndex) {
                 if (this.gameState == 1) {
-                    hg.setFill(Color.WHITE);
+                    hg.setBaseColour(Color.WHITE);
                 }
                 else if (this.gameState == 2) {
-                    hg.setFill(Color.BLACK);
+                    hg.setBaseColour(Color.BLACK);
                 }
+                hg.setFill(hg.getBaseColour());
             }
         }
 

@@ -1,5 +1,6 @@
 package gui;
 
+import agent.HumanPlayer;
 import engine.GameController;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -8,6 +9,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
@@ -29,6 +31,8 @@ public class App extends Application {
     // Elements
     BokuBoard board;
     VBox controlPanel = new VBox();
+    ComboBox<String> player1DropDown = new ComboBox<String>();
+    ComboBox<String> player2DropDown = new ComboBox<String>();
     Button startPauseButton = new Button("Start Game");
     Button resetButton = new Button("Reset Game");
     Button undoMoveButton = new Button("Undo Last Move");
@@ -72,6 +76,7 @@ public class App extends Application {
         infoPanel.setAlignment(Pos.CENTER);
         infoPanel.setPadding(new Insets(20, 20, 20, 20));
         infoPanel.setSpacing(20);
+
         infoPanel.getChildren().add(totalTimeElapsedLabel);
         infoPanel.getChildren().add(whoToTurnLabel);
 
@@ -79,11 +84,14 @@ public class App extends Application {
         controlPanel.setAlignment(Pos.CENTER);
         controlPanel.setPadding(new Insets(20, 20, 20, 20));
         controlPanel.setSpacing(20);
+
+        controlPanel.getChildren().add(player1DropDown);
+        controlPanel.getChildren().add(player2DropDown);
         controlPanel.getChildren().add(startPauseButton);
         controlPanel.getChildren().add(resetButton);
         controlPanel.getChildren().add(undoMoveButton);
 
-        startPauseButton.setOnAction(e -> gameController.startGame());
+        startPauseButton.setOnAction(e -> gameController.initNewGame(new HumanPlayer(), new HumanPlayer()));
 
         // Stats Panel Setup
         statsPanel.setAlignment(Pos.CENTER);

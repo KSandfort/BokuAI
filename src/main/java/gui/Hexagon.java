@@ -19,6 +19,7 @@ public class Hexagon extends Polygon {
             0.5, -1.2247,
             -0.5, -1.2247
     };
+    private Color baseColour;
 
     public Hexagon(double centerX, double centerY, double radius, int coordinateIndex) {
         super();
@@ -31,7 +32,8 @@ public class Hexagon extends Polygon {
                 this.getPoints().add(centerY + (hexagonUnitCoordinates[i] * (radius * 0.75)));
             }
         }
-        this.setFill(Color.GRAY);
+        this.baseColour = Color.GRAY;
+        this.setFill(baseColour);
     }
 
 }
