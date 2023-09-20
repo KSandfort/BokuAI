@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Getter
@@ -33,16 +34,16 @@ public class GameController {
     public GameController() {
         this.gameState = 0; //Todo: Remove later
         this.boardStateHistory = new ArrayList<>();
-        // BigInteger boardTest = new BigInteger("0101");
-        // System.out.println(boardTest);
-        // System.out.println(boardTest.toString(2));
+        // Create new empty board
+        this.boardState = new BoardState();
+        // Add empty board to history
+        this.boardStateHistory.add(boardState);
     }
 
     public void initNewGame(Player player1, Player player2) {
         gameState = 1;
         moveCount = 0;
         whiteToTurn = true;
-        this.boardState = new BoardState(new BigInteger("0"), new BigInteger("0"));
         this.player1 = player1;
         this.player2 = player2;
         this.startGame();
@@ -62,12 +63,17 @@ public class GameController {
     /**
      * Attempts to make a move when a human player clicks a tile to place a stone
      */
-    public void attemptMoveOnClick(BokuBoard board, int coordinateIndex) {
-        // If all conditions are met
+    public void attemptMoveOnClick(int coordinateIndex) {
         boolean rejectMove = false; // Flag to tell whether an attempted move should be rejected
         // Check game state
         if (this.gameState == 0) {
             rejectMove = true;
+            System.out.println("Invalid Game State");
+        }
+        // Check if there is already a piece on that position
+        if (this.boardState.getBoard()[coordinateIndex] != 0) {
+            rejectMove = true;
+            System.out.println("Cannot place a piece on this field!");
         }
 
         if (DEBUG_LOG) {
@@ -80,29 +86,24 @@ public class GameController {
 
     public void executeMove(int coordinateIndex) {
         // Update Backend
-        String binaryCoordinate = "1" + "0".repeat(coordinateIndex);
-        BigInteger toAdd = new BigInteger(binaryCoordinate, 2);
         BoardState newBoardState;
         if (this.gameState == 1) {
-            newBoardState = new BoardState(
-                    this.boardState.getWhitePieces().add(toAdd),
-                    this.boardState.getBlackPieces());
+            newBoardState = new BoardState(boardState, true, coordinateIndex);
         }
         else if (this.gameState == 2) {
-            newBoardState = new BoardState(
-                    this.boardState.getWhitePieces(),
-                    this.boardState.getBlackPieces().add(toAdd));
+            newBoardState = new BoardState(boardState, false, coordinateIndex);
         }
         else {
             newBoardState = this.boardState;
             //Todo: Proper error handling
             System.out.println("No valid game state");
         }
-        boardState = newBoardState;
+        // Set new state to current one
+        this.boardState = newBoardState;
+        this.moveCount += 1;
         if (DEBUG_LOG) {
             System.out.println("Game State " + this.gameState);
-            System.out.println("Board state (W): " + (newBoardState.getWhitePieces()).toString(2));
-            System.out.println("Board state (B): " + (newBoardState.getBlackPieces()).toString(2));
+            System.out.println("Board: " + Arrays.toString(this.boardState.getBoard()));
         }
         boardStateHistory.add(boardState);
 
