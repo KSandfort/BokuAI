@@ -63,7 +63,7 @@ public class GameController {
     /**
      * Attempts to make a move when a human player clicks a tile to place a stone
      */
-    public void attemptMoveOnClick(int coordinateIndex) {
+    public void attemptMoveOnClick(int coordinateIndex) throws Exception {
         boolean rejectMove = false; // Flag to tell whether an attempted move should be rejected
         // Check game state
         if (this.gameState == 0) {
@@ -84,7 +84,7 @@ public class GameController {
         }
     }
 
-    public void executeMove(int coordinateIndex) {
+    public void executeMove(int coordinateIndex) throws Exception {
         // Update Backend
         BoardState newBoardState;
         if (this.gameState == 1) {
@@ -121,6 +121,11 @@ public class GameController {
             }
         }
 
+        // Check if game is won
+        boolean whitePlayer = this.gameState == 1;
+        if (this.boardState.isGameWon(whitePlayer)) {
+            System.out.println("Player " + this.gameState + " won the game!");
+        }
 
         // Toggle Player Turn
         togglePlayerTurn();
