@@ -3,7 +3,7 @@ package engine;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -109,28 +109,71 @@ public class BoardState {
         return false;
     }
 
-    private boolean isAdjacent(int x1, int y1, int x2, int y2) {
-        //TODO: Implement
-        return false;
-    }
+    /**
+     * Checks if pieces can be taken.
+     * @param coordinateIndex
+     * @param whitePlayer true if it is the white player's turn
+     * @return array of indices that describe positions where opponents' pieces can be taken
+     */
+    public int[] getPiecesToTake(int coordinateIndex, boolean whitePlayer) {
+        // Convert coordinate into two components
+        int[] coord2d = this.coord1dTo2d(coordinateIndex);
 
-
-    //TODO: Rethink the whole structure of how to check if a piece can be taken and integrate this into the move.
-    private boolean canTake(int player) {
-        //TODO: Implement
-        return false;
-    }
-
-    private int[][] piecesToTake(int player) {
-        return null;
-    }
-
-    public int coord2dTo1d(int[] index2d) throws Exception {
-        if (index2d.length != 2) {
-            throw new Exception("Error! No 2-dimensional coordinate provided!");
+        // Translate whitePlayer boolean to player code
+        int playerCode;
+        if (whitePlayer) {
+            playerCode = 1;
         }
-        // int coord = (index2d[0] * 10) + index2d[1];
-        // System.out.println("COORDINATE " + coord);
+        else {
+            playerCode = -1;
+        }
+
+        // Init empty arraylist
+        List<Integer> toTake = new ArrayList<>();
+
+        // Check top left direction
+        boolean topLeftValid = false;
+        int[] topLeftFirstStep = new int[]{coord2d[0] + 1, coord2d[1]};
+        int[] topLeftSecondStep = new int[]{coord2d[0] + 2, coord2d[1]};
+        int[] topLeftThirdStep = new int[]{coord2d[0] + 3, coord2d[1]};
+
+        if (canTakeOneDir(topLeftFirstStep, topLeftSecondStep, topLeftThirdStep, playerCode)) {
+            toTake.add(coord2dTo1d(topLeftFirstStep));
+            toTake.add(coord2dTo1d(topLeftSecondStep));
+        }
+        // TODO: Remove later
+        return toTake.stream().mapToInt(i -> i).toArray();
+    }
+
+    public boolean canTakeOneDir(int[] step1, int[] step2, int[] step3, int playerCode) {
+        // Check if line is within the board
+        if (!(isCoordinateValid(step1) && isCoordinateValid(step2) && isCoordinateValid(step3))) {
+            return false;
+        }
+        if (
+                board[coord2dTo1d(step1)] == playerCode * -1 &&
+                board[coord2dTo1d(step2)] == playerCode * -1 &&
+                board[coord2dTo1d(step3)] == playerCode
+        ) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isCoordinateValid(int[] coord) {
+        if (coord[0] - coord[1] > 6) { // LHS cutoff bound
+            return false;
+        }
+        if (coord[1] - coord[0] > 6) { // RHS cutoff bound
+            return false;
+        }
+        if (coord[0] > 9 || coord[0] < 0 || coord[1] > 9 || coord[1] < 0 ) { // Out of coordinate range 0 - 9
+            return false;
+        }
+        return true;
+    }
+
+    public int coord2dTo1d(int[] index2d) {
         return (index2d[0] * 10) + index2d[1];
     }
 

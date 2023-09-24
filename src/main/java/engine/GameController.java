@@ -127,6 +127,14 @@ public class GameController {
             System.out.println("Player " + this.gameState + " won the game!");
         }
 
+        // Check if piece can be taken
+        int[] piecesToTake = boardState.getPiecesToTake(coordinateIndex, whitePlayer);
+        if (piecesToTake.length != 0) {
+            // Execute logic to take a piece
+            System.out.println("PIECES TO TAKE");
+            System.out.println(piecesToTake[0] + " " + piecesToTake[1]);
+        }
+
         // Toggle Player Turn
         togglePlayerTurn();
     }
