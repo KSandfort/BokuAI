@@ -1,8 +1,10 @@
 package gui;
 
 import engine.GameController;
+import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -57,5 +59,28 @@ public class BokuBoard extends Pane {
                 }
             }
         }
+    }
+
+    public void placeTakeMarker(int coordinateIndex) {
+        int index1 = coordinateIndex / 10;
+        int index2 = coordinateIndex % 10;
+
+        TakePieceIndicator tpi = new TakePieceIndicator(
+                middle - spreadX * (index1 - index2),
+                middle * 1.9 + spreadY * (-index1 - index2) + yOffset,
+                coordinateIndex, this.gameController);
+        tpi.setFill(Color.DARKRED);
+
+        this.getChildren().add(tpi);
+    }
+
+    public void removeAllTakePieceIndicators() {
+        List<Node> toRemove = new ArrayList<>();
+        for (Node n : this.getChildren()) {
+            if (n instanceof TakePieceIndicator) {
+                toRemove.add(n);
+            }
+        }
+        this.getChildren().removeAll(toRemove);
     }
 }

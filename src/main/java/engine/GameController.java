@@ -7,7 +7,6 @@ import javafx.scene.paint.Color;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -133,10 +132,33 @@ public class GameController {
             // Execute logic to take a piece
             System.out.println("PIECES TO TAKE");
             System.out.println(Arrays.toString(piecesToTake));
+
+            // Highlight pieces to take
+            for (int i : piecesToTake) {
+                bokuBoard.placeTakeMarker(i);
+            }
+
+            // Wait for decision
+
+            // Remove indicators
+
+            // Remove piece
         }
 
         // Toggle Player Turn
         togglePlayerTurn();
+    }
+
+    public void removePiece(int coordinateIndex) {
+        // Update back end
+        this.boardState.getBoard()[coordinateIndex] = 0;
+        // Update front end
+        for (Hexagon hex : this.bokuBoard.getHexagons()) {
+            if (hex.getCoordinateIndex() == coordinateIndex) {
+                hex.setBaseColour(Color.GRAY);
+                hex.setFill(hex.getBaseColour());
+            }
+        }
     }
 
     private void togglePlayerTurn() {
