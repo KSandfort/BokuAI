@@ -20,11 +20,12 @@ public class GameController {
     BokuBoard bokuBoard;
 
     // State properties
-    private int gameState; // 0 = pause, 1 = player 1 to move, 2 = player 2 to move, 3 = player 1 won, 4 = player 2 won
+    private int gameState; // 0 = pause, 1 = player 1 to move, 2 = player 2 to move, 3 = player 1 won, 4 = player 2 won, 5 = white can take, 6 = black can take
     private int moveCount;
     private boolean whiteToTurn; // If true, the white player (1) has to make a move
     private Player player1;
     private Player player2;
+    private int blockedCoordinate; // If a piece gets taken, it is blocked for the next move
 
     private BoardState boardState;
 
@@ -65,7 +66,7 @@ public class GameController {
     public void attemptMoveOnClick(int coordinateIndex) throws Exception {
         boolean rejectMove = false; // Flag to tell whether an attempted move should be rejected
         // Check game state
-        if (this.gameState == 0) {
+        if (!(this.gameState == 1 || this.gameState == 2)) {
             rejectMove = true;
             System.out.println("Invalid Game State");
         }
@@ -132,6 +133,14 @@ public class GameController {
             // Execute logic to take a piece
             System.out.println("PIECES TO TAKE");
             System.out.println(Arrays.toString(piecesToTake));
+
+            // Set game state
+            if (whitePlayer) {
+                this.gameState = 5;
+            }
+            else {
+                this.gameState = 6;
+            }
 
             // Highlight pieces to take
             for (int i : piecesToTake) {

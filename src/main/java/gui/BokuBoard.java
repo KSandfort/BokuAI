@@ -74,7 +74,7 @@ public class BokuBoard extends Pane {
         this.getChildren().add(tpi);
     }
 
-    public void removeAllTakePieceIndicators() {
+    public void removeAllTakePieceIndicators(int gameState) {
         List<Node> toRemove = new ArrayList<>();
         for (Node n : this.getChildren()) {
             if (n instanceof TakePieceIndicator) {
@@ -82,5 +82,10 @@ public class BokuBoard extends Pane {
             }
         }
         this.getChildren().removeAll(toRemove);
+        if (gameState == 5) {
+            gameController.setGameState(2);
+        } else if (gameState == 6) {
+            gameController.setGameState(1);
+        }
     }
 }
