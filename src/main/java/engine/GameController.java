@@ -132,7 +132,7 @@ public class GameController {
         if (piecesToTake.length != 0) {
             // Execute logic to take a piece
             System.out.println("PIECES TO TAKE");
-            System.out.println(piecesToTake[0] + " " + piecesToTake[1]);
+            System.out.println(Arrays.toString(piecesToTake));
         }
 
         // Toggle Player Turn

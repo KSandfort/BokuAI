@@ -30,6 +30,8 @@ public class BoardState {
     }
 
     public boolean isGameWon(boolean whitePlayer) throws Exception {
+
+        //TODO: Make more efficient by just checking tiles in a certain distance (direct line) of the piece that is put
         int playerCode;
         if (whitePlayer) {
             playerCode = 1;
@@ -111,7 +113,7 @@ public class BoardState {
 
     /**
      * Checks if pieces can be taken.
-     * @param coordinateIndex
+     * @param coordinateIndex one-dimensional index of the current tile that is being placed
      * @param whitePlayer true if it is the white player's turn
      * @return array of indices that describe positions where opponents' pieces can be taken
      */
@@ -130,18 +132,70 @@ public class BoardState {
 
         // Init empty arraylist
         List<Integer> toTake = new ArrayList<>();
+        int[] firstStep;
+        int[] secondStep;
+        int[] thirdStep;
 
         // Check top left direction
-        boolean topLeftValid = false;
-        int[] topLeftFirstStep = new int[]{coord2d[0] + 1, coord2d[1]};
-        int[] topLeftSecondStep = new int[]{coord2d[0] + 2, coord2d[1]};
-        int[] topLeftThirdStep = new int[]{coord2d[0] + 3, coord2d[1]};
+        firstStep = new int[]{coord2d[0] + 1, coord2d[1]};
+        secondStep = new int[]{coord2d[0] + 2, coord2d[1]};
+        thirdStep = new int[]{coord2d[0] + 3, coord2d[1]};
 
-        if (canTakeOneDir(topLeftFirstStep, topLeftSecondStep, topLeftThirdStep, playerCode)) {
-            toTake.add(coord2dTo1d(topLeftFirstStep));
-            toTake.add(coord2dTo1d(topLeftSecondStep));
+        if (canTakeOneDir(firstStep, secondStep, thirdStep, playerCode)) {
+            toTake.add(coord2dTo1d(firstStep));
+            toTake.add(coord2dTo1d(secondStep));
         }
-        // TODO: Remove later
+
+        // Check bottom right direction
+        firstStep = new int[]{coord2d[0] - 1, coord2d[1]};
+        secondStep = new int[]{coord2d[0] - 2, coord2d[1]};
+        thirdStep = new int[]{coord2d[0] - 3, coord2d[1]};
+
+        if (canTakeOneDir(firstStep, secondStep, thirdStep, playerCode)) {
+            toTake.add(coord2dTo1d(firstStep));
+            toTake.add(coord2dTo1d(secondStep));
+        }
+
+        // Check bottom left direction
+        firstStep = new int[]{coord2d[0], coord2d[1] - 1};
+        secondStep = new int[]{coord2d[0], coord2d[1] - 2};
+        thirdStep = new int[]{coord2d[0], coord2d[1] - 3};
+
+        if (canTakeOneDir(firstStep, secondStep, thirdStep, playerCode)) {
+            toTake.add(coord2dTo1d(firstStep));
+            toTake.add(coord2dTo1d(secondStep));
+        }
+
+        // Check top right direction
+        firstStep = new int[]{coord2d[0], coord2d[1] + 1};
+        secondStep = new int[]{coord2d[0], coord2d[1] + 2};
+        thirdStep = new int[]{coord2d[0], coord2d[1] + 3};
+
+        if (canTakeOneDir(firstStep, secondStep, thirdStep, playerCode)) {
+            toTake.add(coord2dTo1d(firstStep));
+            toTake.add(coord2dTo1d(secondStep));
+        }
+
+        // Check downwards direction
+        firstStep = new int[]{coord2d[0] - 1, coord2d[1] - 1};
+        secondStep = new int[]{coord2d[0] - 2, coord2d[1] - 2};
+        thirdStep = new int[]{coord2d[0] - 3, coord2d[1] - 3};
+
+        if (canTakeOneDir(firstStep, secondStep, thirdStep, playerCode)) {
+            toTake.add(coord2dTo1d(firstStep));
+            toTake.add(coord2dTo1d(secondStep));
+        }
+
+        // Check upwards direction
+        firstStep = new int[]{coord2d[0] + 1, coord2d[1] + 1};
+        secondStep = new int[]{coord2d[0] + 2, coord2d[1] + 2};
+        thirdStep = new int[]{coord2d[0] + 3, coord2d[1] + 3};
+
+        if (canTakeOneDir(firstStep, secondStep, thirdStep, playerCode)) {
+            toTake.add(coord2dTo1d(firstStep));
+            toTake.add(coord2dTo1d(secondStep));
+        }
+
         return toTake.stream().mapToInt(i -> i).toArray();
     }
 
