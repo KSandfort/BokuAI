@@ -1,5 +1,6 @@
 package gui;
 
+import engine.BoardState;
 import engine.GameController;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
@@ -86,6 +87,22 @@ public class BokuBoard extends Pane {
             gameController.setGameState(2);
         } else if (gameState == 6) {
             gameController.setGameState(1);
+        }
+    }
+
+    public void updateGUI(BoardState boardState) {
+        for (Hexagon hex : this.getHexagons()) {
+            int colourCode = boardState.getBoard()[hex.getCoordinateIndex()];
+            if (colourCode == 0) {
+                hex.setBaseColour(Hexagon.unsetColour);
+            }
+            if (colourCode == 1) {
+                hex.setFill(Color.WHITE);
+            }
+            if (colourCode == -1) {
+                hex.setFill(Color.BLACK);
+            }
+            hex.setFill(hex.getBaseColour());
         }
     }
 }

@@ -93,6 +93,8 @@ public class App extends Application {
 
         startPauseButton.setOnAction(e -> gameController.initNewGame(new HumanPlayer(), new HumanPlayer()));
 
+        undoMoveButton.setOnAction(e -> gameController.undoSingleMove());
+
         // Stats Panel Setup
         statsPanel.setAlignment(Pos.CENTER);
         statsPanel.setPadding(new Insets(20, 20, 20, 20));

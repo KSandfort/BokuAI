@@ -133,6 +133,12 @@ public class GameController {
         boolean whitePlayer = this.gameState == 1;
         if (this.boardState.isGameWon(whitePlayer)) {
             System.out.println("Player " + this.gameState + " won the game!");
+            if (whitePlayer) {
+                this.gameState = 3;
+            }
+            else {
+                this.gameState = 4;
+            }
         }
 
         // Check if piece can be taken
@@ -169,10 +175,11 @@ public class GameController {
     public void removePiece(int coordinateIndex) {
         // Update back end
         this.boardState.getBoard()[coordinateIndex] = 0;
+        this.boardStateHistory.add(boardState);
         // Update front end
         for (Hexagon hex : this.bokuBoard.getHexagons()) {
             if (hex.getCoordinateIndex() == coordinateIndex) {
-                hex.setBaseColour(Color.GRAY);
+                hex.setBaseColour(Hexagon.unsetColour);
                 hex.setFill(hex.getBaseColour());
             }
         }
@@ -185,5 +192,22 @@ public class GameController {
         else if (this.gameState == 2) {
             this.gameState = 1;
         }
+    }
+
+    public void undoSingleMove() {
+        // Get board state from history
+        this.boardState = this.boardStateHistory.get(this.boardStateHistory.size() - 2);
+        this.boardStateHistory.remove(this.boardStateHistory.size() - 1);
+
+        // Toggle state
+        if (this.gameState == 1) {
+            this.gameState = 2;
+        }
+        else if (this.gameState == 2) {
+            this.gameState = 1;
+        }
+
+        // Update GUI
+        bokuBoard.updateGUI(boardState);
     }
 }

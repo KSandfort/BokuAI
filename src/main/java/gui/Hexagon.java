@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 public class Hexagon extends Polygon {
 
+    public static Color unsetColour = Color.GRAY;
     private int coordinateIndex;
     Polygon polygon = new Polygon();
     Double[] hexagonUnitCoordinates = new Double[]{
@@ -32,7 +33,7 @@ public class Hexagon extends Polygon {
                 this.getPoints().add(centerY + (hexagonUnitCoordinates[i] * (radius * 0.75)));
             }
         }
-        this.baseColour = Color.GRAY;
+        this.baseColour = unsetColour;
         this.setFill(baseColour);
     }
 
