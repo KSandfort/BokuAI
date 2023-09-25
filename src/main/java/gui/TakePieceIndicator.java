@@ -19,8 +19,9 @@ public class TakePieceIndicator extends Circle {
         this.coordinateIndex = coordinateIndex;
         this.gameController = gameController;
         this.setOnMouseClicked(e -> {
-            this.gameController.removePiece(coordinateIndex);
-            this.gameController.getBokuBoard().removeAllTakePieceIndicators(gameController.getGameState());
+            this.gameController.removePiece(this.coordinateIndex);
+            this.gameController.getBokuBoard().removeAllTakePieceIndicators(this.gameController.getGameState());
+            this.gameController.setBlockedCoordinate(this.coordinateIndex);
         });
     }
 }

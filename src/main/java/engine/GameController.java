@@ -25,7 +25,7 @@ public class GameController {
     private boolean whiteToTurn; // If true, the white player (1) has to make a move
     private Player player1;
     private Player player2;
-    private int blockedCoordinate; // If a piece gets taken, it is blocked for the next move
+    private int blockedCoordinate = -1; // If a piece gets taken, it is blocked for the next move
 
     private BoardState boardState;
 
@@ -70,10 +70,15 @@ public class GameController {
             rejectMove = true;
             System.out.println("Invalid Game State");
         }
-        // Check if there is already a piece on that position
+        // Check if there is already a piece at that position
         if (this.boardState.getBoard()[coordinateIndex] != 0) {
             rejectMove = true;
             System.out.println("Cannot place a piece on this field!");
+        }
+        // Check if piece is currently blocked by capture from last move
+        if (coordinateIndex == this.blockedCoordinate) {
+            rejectMove = true;
+            System.out.println("Cannot place a piece on this field, position blocked from capture");
         }
 
         if (DEBUG_LOG) {
@@ -106,6 +111,9 @@ public class GameController {
             System.out.println("Board: " + Arrays.toString(this.boardState.getBoard()));
         }
         boardStateHistory.add(boardState);
+
+        // Remove blocked coordinate
+        this.blockedCoordinate = -1;
 
         // Update GUI
 
