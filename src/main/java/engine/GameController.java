@@ -110,13 +110,13 @@ public class GameController {
             System.out.println("Game State " + this.gameState);
             System.out.println("Board: " + Arrays.toString(this.boardState.getBoard()));
         }
+        // Add to history
         boardStateHistory.add(boardState);
 
         // Remove blocked coordinate
         this.blockedCoordinate = -1;
 
         // Update GUI
-
         for (Hexagon hg : bokuBoard.getHexagons()) {
             if (hg.getCoordinateIndex() == coordinateIndex) {
                 if (this.gameState == 1) {
@@ -160,12 +160,6 @@ public class GameController {
             for (int i : piecesToTake) {
                 bokuBoard.placeTakeMarker(i);
             }
-
-            // Wait for decision
-
-            // Remove indicators
-
-            // Remove piece
         }
 
         // Toggle Player Turn
@@ -175,8 +169,9 @@ public class GameController {
     public void removePiece(int coordinateIndex) {
         // Update back end
         this.boardState.getBoard()[coordinateIndex] = 0;
+        this.boardStateHistory.remove(this.boardStateHistory.size() - 1);
         this.boardStateHistory.add(boardState);
-        // Update front end
+        // Update GUI
         for (Hexagon hex : this.bokuBoard.getHexagons()) {
             if (hex.getCoordinateIndex() == coordinateIndex) {
                 hex.setBaseColour(Hexagon.unsetColour);
@@ -208,6 +203,6 @@ public class GameController {
         }
 
         // Update GUI
-        bokuBoard.updateGUI(boardState);
+        bokuBoard.updateGUI(this.boardState);
     }
 }

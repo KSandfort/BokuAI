@@ -96,11 +96,11 @@ public class BokuBoard extends Pane {
             if (colourCode == 0) {
                 hex.setBaseColour(Hexagon.unsetColour);
             }
-            if (colourCode == 1) {
-                hex.setFill(Color.WHITE);
+            else if (colourCode == 1) {
+                hex.setBaseColour(Color.WHITE);
             }
-            if (colourCode == -1) {
-                hex.setFill(Color.BLACK);
+            else if (colourCode == -1) {
+                hex.setBaseColour(Color.BLACK);
             }
             hex.setFill(hex.getBaseColour());
         }
