@@ -8,16 +8,22 @@ import java.util.List;
 
 @Getter
 @Setter
+/**
+ * This class holds an abstract representation of the board state at a given moment during the game.
+ */
 public class BoardState {
 
     int[] board;
+    boolean whiteToMove;
 
     public BoardState() {
         this.board = new int[100];
+        this.whiteToMove = true;
     }
 
     public BoardState(BoardState oldBoard, boolean whiteMove, int positionIndex) {
         this.board = oldBoard.getBoard().clone();
+        this.whiteToMove = whiteMove;
         int playerValue;
         if (whiteMove) {
             playerValue = 1;
@@ -29,7 +35,7 @@ public class BoardState {
         this.board[positionIndex] = playerValue;
     }
 
-    public boolean isGameWon(boolean whitePlayer) throws Exception {
+    public boolean isGameWon(boolean whitePlayer) {
 
         //TODO: Make more efficient by just checking tiles in a certain distance (direct line) of the piece that is put
         int playerCode;

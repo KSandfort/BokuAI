@@ -89,7 +89,7 @@ public class GameController {
         }
     }
 
-    public void executeMove(int coordinateIndex) throws Exception {
+    public void executeMove(int coordinateIndex) {
         // Update Backend
         BoardState newBoardState;
         if (this.gameState == 1) {
