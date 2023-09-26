@@ -1,6 +1,10 @@
 package engine;
 
+import agent.HumanPlayer;
+import agent.MinimaxPlayer;
 import agent.Player;
+import agent.RandomPlayer;
+import gui.App;
 import gui.BokuBoard;
 import gui.Hexagon;
 import javafx.scene.paint.Color;
@@ -15,6 +19,8 @@ import java.util.List;
 @Setter
 public class GameController {
 
+    private App appInstance;
+
     private static boolean DEBUG_LOG = true;
 
     BokuBoard bokuBoard;
@@ -22,7 +28,6 @@ public class GameController {
     // State properties
     private int gameState; // 0 = pause, 1 = player 1 to move, 2 = player 2 to move, 3 = player 1 won, 4 = player 2 won, 5 = white can take, 6 = black can take
     private int moveCount;
-    private boolean whiteToTurn; // If true, the white player (1) has to make a move
     private Player player1;
     private Player player2;
     private int blockedCoordinate = -1; // If a piece gets taken, it is blocked for the next move
@@ -31,7 +36,8 @@ public class GameController {
 
     private List<BoardState> boardStateHistory;
 
-    public GameController() {
+    public GameController(App appInstance) {
+        this.appInstance = appInstance;
         this.gameState = 0; //Todo: Remove later
         this.boardStateHistory = new ArrayList<>();
         // Create new empty board
@@ -40,24 +46,15 @@ public class GameController {
         this.boardStateHistory.add(boardState);
     }
 
-    public void initNewGame(Player player1, Player player2) {
+    public void initNewGame(String player1Selection, String player2Selection) {
         gameState = 1;
         moveCount = 0;
-        whiteToTurn = true;
         this.player1 = player1;
         this.player2 = player2;
-        this.startGame();
-    }
-
-    public void startGame() {
         if (DEBUG_LOG) {
             System.out.println("Starting game");
         }
-    }
-
-    public void setPlayers(Player player1, Player player2) {
-        this.player1 = player1;
-        this.player2 = player2;
+        this.appInstance.setWhoToTurnLabel(this.gameState);
     }
 
     /**
@@ -100,7 +97,6 @@ public class GameController {
         }
         else {
             newBoardState = this.boardState;
-            //Todo: Proper error handling
             System.out.println("No valid game state");
         }
         // Set new state to current one
@@ -164,6 +160,7 @@ public class GameController {
 
         // Toggle Player Turn
         togglePlayerTurn();
+        this.appInstance.setWhoToTurnLabel(this.gameState);
     }
 
     public void removePiece(int coordinateIndex) {
@@ -204,5 +201,19 @@ public class GameController {
 
         // Update GUI
         bokuBoard.updateGUI(this.boardState);
+    }
+
+    private Player getPlayerInstanceByName(String name) {
+        if (name.equals("Human Player")) {
+            return new HumanPlayer();
+        }
+        if (name.equals("Random")) {
+            return new RandomPlayer();
+        }
+        if (name.equals("Minimax")) {
+            return new MinimaxPlayer();
+        }
+
+        return new HumanPlayer();
     }
 }
