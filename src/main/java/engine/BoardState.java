@@ -36,8 +36,17 @@ public class BoardState {
         this.board[positionIndex] = playerValue;
     }
 
-    public boolean isGameWon(boolean whitePlayer) {
+    public int[] getPossibleMoves() {
+        ArrayList<Integer> targetList = new ArrayList<>();
+        for (int i = 0; i < board.length; i++) {
+            if (board[i] == 0 && isCoordinateValid(coord1dTo2d(i))) {
+                targetList.add(i);
+            }
+        }
+        return targetList.stream().mapToInt(i -> i).toArray();
+    }
 
+    public boolean isGameWon(boolean whitePlayer) {
         //TODO: Make more efficient by just checking tiles in a certain distance (direct line) of the piece that is put
         int playerCode;
         if (whitePlayer) {
@@ -222,10 +231,10 @@ public class BoardState {
     }
 
     private boolean isCoordinateValid(int[] coord) {
-        if (coord[0] - coord[1] > 6) { // LHS cutoff bound
+        if (coord[0] - coord[1] >= 6) { // LHS cutoff bound
             return false;
         }
-        if (coord[1] - coord[0] > 6) { // RHS cutoff bound
+        if (coord[1] - coord[0] >= 6) { // RHS cutoff bound
             return false;
         }
         if (coord[0] > 9 || coord[0] < 0 || coord[1] > 9 || coord[1] < 0 ) { // Out of coordinate range 0 - 9

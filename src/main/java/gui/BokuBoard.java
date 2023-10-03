@@ -104,4 +104,5 @@ public class BokuBoard extends Pane {
             hex.setFill(hex.getBaseColour());
         }
     }
+
 }

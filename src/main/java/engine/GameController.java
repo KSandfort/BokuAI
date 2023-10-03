@@ -206,7 +206,7 @@ public class GameController {
 
         // If human player plays against AI, trigger next move
         if (humanVsAgent && this.gameState == 2) {
-            // TODO: Get and execute move for player 2
+            this.executeMove(player2.getMove(this.boardState));
         }
         else if (agentVsHuman && this.gameState == 1) {
             // TODO: Get and execute move for player 2
