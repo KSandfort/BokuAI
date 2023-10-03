@@ -30,13 +30,11 @@ public class GameController {
     private int moveCount;
     private Player player1;
     private Player player2;
-    private int blockedCoordinate = -1; // If a piece gets taken, it is blocked for the next move
 
     private BoardState boardState;
 
     private List<BoardState> boardStateHistory;
 
-    private boolean agentVsAgent = false;
     private boolean humanVsAgent = false;
     private boolean agentVsHuman = false;
 
@@ -59,10 +57,41 @@ public class GameController {
             System.out.println("Starting game");
         }
         this.appInstance.setWhoToTurnLabel(this.gameState);
+        // Start game loop if both players are agents
+        if (!(this.player1 instanceof HumanPlayer || this.player2 instanceof HumanPlayer)) {
+            gameLoopAgentVsAgent();
+        }
+
+        // Human vs Agent
+        if (this.player1 instanceof HumanPlayer && !(this.player2 instanceof HumanPlayer)) {
+            this.humanVsAgent = true;
+        }
+
+        // Agent vs Human
+        if (!(this.player1 instanceof HumanPlayer) && this.player2 instanceof HumanPlayer) {
+            this.agentVsHuman = true;
+            // TODO: Execute move for player (agent) 1
+        }
+
     }
 
     private void gameLoopAgentVsAgent() {
+        do {
+            // If player 1 is an agent, perform action
+            if (this.gameState == 1) {
 
+            }
+            // If player 1 is an agent, perform action
+            else if (this.gameState == 2) {
+
+            }
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        while (this.gameState != 3 && this.gameState != 4);
     }
 
     private void gameLoopHumanVsAgent() {
@@ -89,7 +118,7 @@ public class GameController {
             System.out.println("Cannot place a piece on this field!");
         }
         // Check if piece is currently blocked by capture from last move
-        if (coordinateIndex == this.blockedCoordinate) {
+        if (coordinateIndex == this.boardState.getBlockedCoordinate()) {
             rejectMove = true;
             System.out.println("Cannot place a piece on this field, position blocked from capture");
         }
@@ -124,9 +153,6 @@ public class GameController {
         }
         // Add to history
         boardStateHistory.add(boardState);
-
-        // Remove blocked coordinate
-        this.blockedCoordinate = -1;
 
         // Update GUI
         for (Hexagon hg : bokuBoard.getHexagons()) {
@@ -177,19 +203,13 @@ public class GameController {
         // Toggle Player Turn
         togglePlayerTurn();
         this.appInstance.setWhoToTurnLabel(this.gameState);
-    }
 
-    /**
-     * The purpose of this method is to handle different player combinations.
-     * If two human players are playing against each other, the program will wait for an input.
-     * If one or both players are agents, the next move will be fetched directly.
-     */
-    private void prepareNextMove() {
-        if (this.gameState == 1 && !(this.player1 instanceof HumanPlayer)) {
-
+        // If human player plays against AI, trigger next move
+        if (humanVsAgent && this.gameState == 2) {
+            // TODO: Get and execute move for player 2
         }
-        if (this.gameState == 2 && !(this.player2 instanceof HumanPlayer)) {
-
+        else if (agentVsHuman && this.gameState == 1) {
+            // TODO: Get and execute move for player 2
         }
     }
 
@@ -205,6 +225,10 @@ public class GameController {
                 hex.setFill(hex.getBaseColour());
             }
         }
+        bokuBoard.removeAllTakePieceIndicators(this.gameState);
+        this.boardState.setBlockedCoordinate(coordinateIndex);
+        this.boardStateHistory.remove(this.boardStateHistory.size() - 1);
+        this.boardStateHistory.add(this.boardState);
     }
 
     private void togglePlayerTurn() {
@@ -228,6 +252,8 @@ public class GameController {
         else if (this.gameState == 2) {
             this.gameState = 1;
         }
+
+        this.moveCount -= 1;
 
         // Update GUI
         bokuBoard.updateGUI(this.boardState);

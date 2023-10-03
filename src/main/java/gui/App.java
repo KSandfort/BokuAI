@@ -1,6 +1,5 @@
 package gui;
 
-import agent.HumanPlayer;
 import engine.GameController;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -68,8 +67,7 @@ public class App extends Application {
         // Layout
         BorderPane root = new BorderPane();
 
-
-        board = new BokuBoard(boardWidth,  boardHeight, gameController);
+        board = new BokuBoard(boardWidth, boardHeight, gameController);
         gameController.setBokuBoard(board);
 
         // --- Info Panel Setup ---

@@ -15,6 +15,7 @@ public class BoardState {
 
     int[] board;
     boolean whiteToMove;
+    int blockedCoordinate = -1;
 
     public BoardState() {
         this.board = new int[100];

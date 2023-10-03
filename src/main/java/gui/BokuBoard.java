@@ -5,7 +5,6 @@ import engine.GameController;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import lombok.Getter;
 import lombok.Setter;
 
