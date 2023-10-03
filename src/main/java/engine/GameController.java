@@ -36,6 +36,10 @@ public class GameController {
 
     private List<BoardState> boardStateHistory;
 
+    private boolean agentVsAgent = false;
+    private boolean humanVsAgent = false;
+    private boolean agentVsHuman = false;
+
     public GameController(App appInstance) {
         this.appInstance = appInstance;
         this.gameState = 0; //Todo: Remove later
@@ -49,18 +53,30 @@ public class GameController {
     public void initNewGame(String player1Selection, String player2Selection) {
         gameState = 1;
         moveCount = 0;
-        this.player1 = player1;
-        this.player2 = player2;
+        this.player1 = this.getPlayerInstanceByName(player1Selection);
+        this.player2 = this.getPlayerInstanceByName(player2Selection);
         if (DEBUG_LOG) {
             System.out.println("Starting game");
         }
         this.appInstance.setWhoToTurnLabel(this.gameState);
     }
 
+    private void gameLoopAgentVsAgent() {
+
+    }
+
+    private void gameLoopHumanVsAgent() {
+
+    }
+
+    private void gameLoopAgentVsHuman() {
+
+    }
+
     /**
      * Attempts to make a move when a human player clicks a tile to place a stone
      */
-    public void attemptMoveOnClick(int coordinateIndex) throws Exception {
+    public void attemptMoveOnClick(int coordinateIndex) {
         boolean rejectMove = false; // Flag to tell whether an attempted move should be rejected
         // Check game state
         if (!(this.gameState == 1 || this.gameState == 2)) {
@@ -161,6 +177,20 @@ public class GameController {
         // Toggle Player Turn
         togglePlayerTurn();
         this.appInstance.setWhoToTurnLabel(this.gameState);
+    }
+
+    /**
+     * The purpose of this method is to handle different player combinations.
+     * If two human players are playing against each other, the program will wait for an input.
+     * If one or both players are agents, the next move will be fetched directly.
+     */
+    private void prepareNextMove() {
+        if (this.gameState == 1 && !(this.player1 instanceof HumanPlayer)) {
+
+        }
+        if (this.gameState == 2 && !(this.player2 instanceof HumanPlayer)) {
+
+        }
     }
 
     public void removePiece(int coordinateIndex) {
