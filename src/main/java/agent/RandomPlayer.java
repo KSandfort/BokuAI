@@ -14,4 +14,10 @@ public class RandomPlayer extends Player{
         System.out.println("Random Move Coord: " + nextMove);
         return nextMove;
     }
+
+    @Override
+    public int getPieceToTake(int[] toTake) {
+        Random random = new Random();
+        return toTake[random.nextInt(toTake.length - 1)];
+    }
 }

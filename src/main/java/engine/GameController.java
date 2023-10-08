@@ -94,14 +94,6 @@ public class GameController {
         while (this.gameState != 3 && this.gameState != 4);
     }
 
-    private void gameLoopHumanVsAgent() {
-
-    }
-
-    private void gameLoopAgentVsHuman() {
-
-    }
-
     /**
      * Attempts to make a move when a human player clicks a tile to place a stone
      */
@@ -195,8 +187,20 @@ public class GameController {
             }
 
             // Highlight pieces to take
-            for (int i : piecesToTake) {
-                bokuBoard.placeTakeMarker(i);
+            if ((this.gameState == 5 && this.player1 instanceof HumanPlayer) || (this.gameState == 6 && this.player2 instanceof HumanPlayer)) {
+                for (int i : piecesToTake) {
+                    bokuBoard.placeTakeMarker(i);
+                }
+            }
+            else {
+                if (this.gameState == 5) {
+                    removePiece(player1.getPieceToTake(piecesToTake));
+                    this.gameState = 2;
+                }
+                else {
+                    removePiece(player2.getPieceToTake(piecesToTake));
+                    this.gameState = 1;
+                }
             }
         }
 
@@ -226,9 +230,19 @@ public class GameController {
             }
         }
         bokuBoard.removeAllTakePieceIndicators(this.gameState);
+        // Update state history and blocked coordinate
         this.boardState.setBlockedCoordinate(coordinateIndex);
         this.boardStateHistory.remove(this.boardStateHistory.size() - 1);
         this.boardStateHistory.add(this.boardState);
+
+        if (this.gameState == 5 && this.player1 instanceof HumanPlayer && !(this.player2 instanceof HumanPlayer)) {
+            this.gameState = 2;
+            this.executeMove(player2.getMove(this.boardState));
+        }
+        if (this.gameState == 6 && this.player2 instanceof HumanPlayer && !(this.player1 instanceof HumanPlayer)) {
+            this.gameState = 1;
+            this.executeMove(player1.getMove(this.boardState));
+        }
     }
 
     private void togglePlayerTurn() {

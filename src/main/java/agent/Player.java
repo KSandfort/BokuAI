@@ -4,4 +4,5 @@ import engine.BoardState;
 
 public abstract class Player {
     public abstract int getMove(BoardState boardState);
+    public abstract int getPieceToTake(int[] toTake);
 }
