@@ -7,6 +7,7 @@ import agent.RandomPlayer;
 import gui.App;
 import gui.BokuBoard;
 import gui.Hexagon;
+import javafx.application.Platform;
 import javafx.scene.paint.Color;
 import lombok.Getter;
 import lombok.Setter;
@@ -57,10 +58,6 @@ public class GameController {
             System.out.println("Starting game");
         }
         this.appInstance.setWhoToTurnLabel(this.gameState);
-        // Start game loop if both players are agents
-        if (!(this.player1 instanceof HumanPlayer || this.player2 instanceof HumanPlayer)) {
-            gameLoopAgentVsAgent();
-        }
 
         // Human vs Agent
         if (this.player1 instanceof HumanPlayer && !(this.player2 instanceof HumanPlayer)) {
@@ -73,26 +70,52 @@ public class GameController {
             this.executeMove(player2.getMove(this.boardState));
         }
 
+        // Agent vs Agent - Enter game loop
+        if (!(this.player1 instanceof HumanPlayer || this.player2 instanceof HumanPlayer)) {
+            //gameLoopAgentVsAgent();
+        }
+
     }
 
+    public void agentVsAgentOneStep() {
+        // If player 1 is an agent, perform action
+        if (this.gameState == 1) {
+            this.executeMove(player1.getMove(this.boardState));
+        }
+        // If player 1 is an agent, perform action
+        else if (this.gameState == 2) {
+            this.executeMove(player2.getMove(this.boardState));
+        }
+
+        this.bokuBoard.updateGUI(this.boardState);
+    }
+
+    /*
     private void gameLoopAgentVsAgent() {
         do {
             // If player 1 is an agent, perform action
             if (this.gameState == 1) {
-
+                this.executeMove(player1.getMove(this.boardState));
             }
             // If player 1 is an agent, perform action
             else if (this.gameState == 2) {
-
+                this.executeMove(player2.getMove(this.boardState));
             }
+
+            Platform.runLater(() -> {
+                this.bokuBoard.updateGUI(this.boardState);
+            });
+
             try {
-                Thread.sleep(100);
+                Platform.runLater(() -> this.bokuBoard.updateGUI(this.getBoardState()));
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
         }
         while (this.gameState != 3 && this.gameState != 4);
     }
+    */
 
     /**
      * Attempts to make a move when a human player clicks a tile to place a stone

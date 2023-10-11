@@ -1,6 +1,7 @@
 package gui;
 
 import engine.GameController;
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -30,6 +31,7 @@ public class App extends Application {
     final int windowHeight = 800;
     final int boardWidth = 500;
     final int boardHeight = 500;
+    final int FPS = 25;
 
     String player1Selection = "Human Player";
     String player2Selection = "Human Player";
@@ -44,6 +46,7 @@ public class App extends Application {
     Button startPauseButton = new Button("Start Game");
     Button resetButton = new Button("Reset Game");
     Button undoMoveButton = new Button("Undo Last Move");
+    Button continueButton = new Button("Continue (Agent vs Agent");
 
     HBox infoPanel = new HBox();
     Label totalTimeElapsedLabel = new Label("00:00");
@@ -116,10 +119,13 @@ public class App extends Application {
         controlPanel.getChildren().add(startPauseButton);
         controlPanel.getChildren().add(resetButton);
         controlPanel.getChildren().add(undoMoveButton);
+        controlPanel.getChildren().add(continueButton);
 
         startPauseButton.setOnAction(e -> gameController.initNewGame(player1Selection, player2Selection));
 
         undoMoveButton.setOnAction(e -> gameController.undoSingleMove());
+
+        continueButton.setOnAction(e -> gameController.agentVsAgentOneStep());
 
         // --- Stats Panel Setup ---
         statsPanel.setAlignment(Pos.CENTER);
@@ -136,8 +142,23 @@ public class App extends Application {
         root.setRight(statsPanel);
 
         primaryStage.setScene(new Scene(root, windowWidth, windowHeight));
+
+        AnimationTimer animator = new AnimationTimer() {
+            long startTime = System.nanoTime();
+            @Override
+            public void handle(long arg0) {
+                long currentTime = System.nanoTime();
+                if (FPS <= (currentTime - startTime)) {
+                    gameController.getBokuBoard().updateGUI(gameController.getBoardState());
+                    startTime = currentTime;
+                }
+            }
+        };
+        animator.start();
+
         primaryStage.show();
     }
+
 
     public void setWhoToTurnLabel(int gameState) {
         if (gameState == 1) {
