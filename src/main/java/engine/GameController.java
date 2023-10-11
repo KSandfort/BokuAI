@@ -40,7 +40,7 @@ public class GameController {
 
     public GameController(App appInstance) {
         this.appInstance = appInstance;
-        this.gameState = 0; //Todo: Remove later
+        this.gameState = 0;
         this.boardStateHistory = new ArrayList<>();
         // Create new empty board
         this.boardState = new BoardState();
@@ -70,7 +70,7 @@ public class GameController {
         // Agent vs Human
         if (!(this.player1 instanceof HumanPlayer) && this.player2 instanceof HumanPlayer) {
             this.agentVsHuman = true;
-            // TODO: Execute move for player (agent) 1
+            this.executeMove(player2.getMove(this.boardState));
         }
 
     }
@@ -213,7 +213,7 @@ public class GameController {
             this.executeMove(player2.getMove(this.boardState));
         }
         else if (agentVsHuman && this.gameState == 1) {
-            // TODO: Get and execute move for player 2
+            this.executeMove(player1.getMove(this.boardState));
         }
     }
 
