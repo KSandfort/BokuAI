@@ -235,12 +235,10 @@ public class GameController {
         this.boardStateHistory.remove(this.boardStateHistory.size() - 1);
         this.boardStateHistory.add(this.boardState);
 
-        if (this.gameState == 5 && this.player1 instanceof HumanPlayer && !(this.player2 instanceof HumanPlayer)) {
-            this.gameState = 2;
+        if (this.gameState == 2 && this.player1 instanceof HumanPlayer && !(this.player2 instanceof HumanPlayer)) {
             this.executeMove(player2.getMove(this.boardState));
         }
-        if (this.gameState == 6 && this.player2 instanceof HumanPlayer && !(this.player1 instanceof HumanPlayer)) {
-            this.gameState = 1;
+        if (this.gameState == 1 && this.player2 instanceof HumanPlayer && !(this.player1 instanceof HumanPlayer)) {
             this.executeMove(player1.getMove(this.boardState));
         }
     }
