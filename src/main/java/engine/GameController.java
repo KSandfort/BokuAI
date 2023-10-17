@@ -27,7 +27,7 @@ public class GameController {
     BokuBoard bokuBoard;
 
     // State properties
-    private int gameState; // 0 = pause, 1 = player 1 to move, 2 = player 2 to move, 3 = player 1 won, 4 = player 2 won, 5 = white can take, 6 = black can take
+    private int gameState; // 0 = pause, 1 = player 1 to move, 2 = player 2 to move, 3 = player 1 won, 4 = player 2 won, 5 = white can take, 6 = black can take, 7 = draw
     private int moveCount;
     private Player player1;
     private Player player2;
@@ -192,6 +192,12 @@ public class GameController {
             else {
                 this.gameState = 4;
             }
+        }
+
+        // Check for draw
+        if (this.boardState.isDraw()) {
+            this.gameState = 7;
+            System.out.println("It's a draw!");
         }
 
         // Check if piece can be taken

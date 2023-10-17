@@ -127,6 +127,15 @@ public class BoardState {
         return false;
     }
 
+    public boolean isDraw() {
+        for (int i = 0; i < this.board.length; i++) {
+            if (this.board[i] == 0 && isCoordinateValid(coord1dTo2d(this.board[i]))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * Checks if pieces can be taken.
      * @param coordinateIndex one-dimensional index of the current tile that is being placed
