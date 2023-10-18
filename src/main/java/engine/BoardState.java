@@ -259,4 +259,116 @@ public class BoardState {
     public int[] coord1dTo2d(int index1d) {
         return new int[]{index1d / 10, index1d % 10};
     }
+
+    public int[] getBoardFeatures(int playerCode) {
+        int[] result = new int[14];
+        int nRows2Own = 0; //  0 = Own player rows of 2
+        int nRows2Opp = 0; //  1 = Opp player rows of 2
+        //  2 = Own player rows of 3
+        //  3 = Opp player rows of 3
+        //  4 = Own player rows of 4
+        //  5 = Opp player rows of 4
+        //  6 = Own player rows of 2
+        //  7 = Opp player rows of 2
+        //  8 = Own player rows of 3
+        //  9 = Opp player rows of 3
+        // 10 = Own player rows of 4
+        // 11 = Opp player rows of 4
+        // 12 = Own player possible captures
+        // 13 = Opp player possible captures
+
+        int countOwn = 0;
+        int countOpp = 0;
+        int countOwnGap = 0;
+        int countOppGap = 0;
+        int blanksOwn = 0;
+        int blanksOpp = 0;
+
+        int maxCountOwn = 0;
+        int maxCountOpp = 0;
+        int maxCountOwnGap = 0;
+        int maxCountOppGap = 0;
+
+        // First diagonal
+        for (int i = 0; i < 10; i++) { // For each column
+            countOwn = 0;
+            countOwnGap = 0;
+            for (int j = 0; j < 10; j++) { // For each element within the column
+                if (isCoordinateValid(new int[]{i, j})) { // Check validity of cell
+                    int cellCode = this.board[coord2dTo1d(new int[]{i, j})];
+                    if (cellCode == playerCode) {
+                        countOwn += 1;
+                        countOpp = 0;
+                        countOwnGap += 1;
+                        countOppGap = 0;
+                        blanksOwn = 0;
+                        blanksOpp = 0;
+                    }
+                    if (cellCode == playerCode * -1) {
+                        countOwn = 0;
+                        countOpp += 1;
+                        countOwnGap = 0;
+                        countOppGap += 1;
+                        blanksOwn = 0;
+                        blanksOpp = 0;
+                    }
+                    if (cellCode == 0) {
+                        countOwn = 0;
+                        countOpp = 0;
+                        countOwnGap += 1;
+                        countOppGap += 1;
+                        blanksOwn += 1;
+                        blanksOpp += 1;
+                    }
+                    // Update maximum counts
+                    maxCountOwn = (Math.max(countOwn, maxCountOwn));
+                    maxCountOpp = (Math.max(countOpp, maxCountOpp));
+
+                }
+                if (maxCountOwn == 2) {
+                    result[0] += 1;
+                }
+                if (maxCountOpp == 2) {
+                    result[1] += 1;
+                }
+                if (maxCountOwn == 3) {
+                    result[2] += 1;
+                }
+                if (maxCountOpp == 3) {
+                    result[3] += 1;
+                }
+                if (maxCountOwn == 4) {
+                    result[4] += 1;
+                }
+                if (maxCountOwn == 4) {
+                    result[5] += 1;
+                }
+            }
+        }
+
+        // Second diagonal
+        for (int i = 0; i < 10; i++) { // For each column
+            for (int j = 0; j < 10; j++) { // For each element within the column
+            }
+        }
+
+        // Vertical
+        // Left Side
+        for (int i = 0; i < 7; i++) { // For each column
+            for (int j = 0; j < 10; j++) { // For each element within the column
+            }
+        }
+        // Right side
+        for (int i = 1; i < 7; i++) { // For each column
+            for (int j = 0; j < 10; j++) { // For each element within the column
+            }
+        }
+        return result;
+    }
+
+    private int[] getBoardFeaturesOneDir() {
+        int[] result = new int[14];
+
+        return result;
+    }
 }

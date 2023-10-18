@@ -52,6 +52,22 @@ public class StateEvaluator {
             }
         }
 
+        // Obtain all board features in one array
+        int[] boardFeatures = boardState.getBoardFeatures(playerCode);
+        score += boardFeatures[0] * ROW_OF_2; // Own player rows of 2
+        score -= boardFeatures[1] * ROW_OF_2; // Opp player rows of 2
+        score += boardFeatures[2] * ROW_OF_3; // Own player rows of 3
+        score -= boardFeatures[3] * ROW_OF_3; // Opp player rows of 3
+        score += boardFeatures[4] * ROW_OF_4; // Own player rows of 4
+        score -= boardFeatures[5] * ROW_OF_4; // Opp player rows of 4
+        score += boardFeatures[6] * OPEN_ROW_OF_2; // Own player rows of 2
+        score -= boardFeatures[7] * OPEN_ROW_OF_2; // Opp player rows of 2
+        score += boardFeatures[8] * OPEN_ROW_OF_3; // Own player rows of 3
+        score -= boardFeatures[9] * OPEN_ROW_OF_3; // Opp player rows of 3
+        score += boardFeatures[10] * OPEN_ROW_OF_4; // Own player rows of 4
+        score -= boardFeatures[11] * OPEN_ROW_OF_4; // Opp player rows of 4
+        score += boardFeatures[12] * CAPTURE_POSSIBLE; // Own player possible captures
+        score -= boardFeatures[13] * CAPTURE_POSSIBLE; // Opp player possible captures
 
         return score;
     }
