@@ -4,6 +4,7 @@ import agent.HumanPlayer;
 import agent.MinimaxPlayer;
 import agent.Player;
 import agent.RandomPlayer;
+import agent.utils.StateEvaluator;
 import gui.App;
 import gui.BokuBoard;
 import gui.Hexagon;
@@ -25,6 +26,7 @@ public class GameController {
     private static boolean DEBUG_LOG = true;
 
     BokuBoard bokuBoard;
+    StateEvaluator stateEvaluator = new StateEvaluator();
 
     // State properties
     private int gameState; // 0 = pause, 1 = player 1 to move, 2 = player 2 to move, 3 = player 1 won, 4 = player 2 won, 5 = white can take, 6 = black can take, 7 = draw
@@ -234,7 +236,7 @@ public class GameController {
         }
 
         //TODO: Remove later
-        System.out.println("Pieces to take next move");
+        stateEvaluator.evaluate_v1(this.boardState, this.gameState == 1);
         System.out.println(this.boardState.possibleCapturesNextMove(1).length);
 
         // Toggle Player Turn

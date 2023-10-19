@@ -5,6 +5,8 @@ import engine.BoardState;
 public class StateEvaluator {
     //Todo: Add multiple evaluation methods that can be called
 
+    private static final boolean DEBUG_LOG = true;
+
     // Feature weights
     private static final int BOUND = 1000;
     private static final int PIECE_COUNT = 1;
@@ -36,16 +38,21 @@ public class StateEvaluator {
 
         // Init score
         int score = 0;
+        int ownPlayerPieces = 0;
+        int oppPlayerPieces = 0;
 
         // Get number of pieces for each player
         for (int i = 0; i < boardState.getBoard().length; i++) {
             if (boardState.getBoard()[i] == playerCode) {
-                score += PIECE_COUNT;
+                ownPlayerPieces += 1;
             }
             if (boardState.getBoard()[i] == playerCode * -1) {
-                score -= PIECE_COUNT;
+                oppPlayerPieces += 1;
             }
         }
+
+        score += ownPlayerPieces * PIECE_COUNT;
+        score -= oppPlayerPieces * PIECE_COUNT;
 
         // Obtain all board features in one array
         int[] boardFeatures = boardState.getBoardFeatures(playerCode);
@@ -59,6 +66,17 @@ public class StateEvaluator {
         score -= boardFeatures[7] * MAX_TILES_IN_UNBLOCKED_ROW; // Opp player maximum number of tiles in unblocked row
         score += boardFeatures[8] * CAPTURE_POSSIBLE; // Own player possible captures
         score -= boardFeatures[9] * CAPTURE_POSSIBLE; // Opp player possible captures
+
+        if (DEBUG_LOG) {
+            System.out.println("--- BOARD EVALUATION ---");
+            System.out.printf("Own pieces: %d \n", ownPlayerPieces);
+            System.out.printf("Own pieces: %d \n", oppPlayerPieces);
+            for (int i = 0; i < boardFeatures.length; i++) {
+                System.out.printf("Board Feature %d: %d \n", i, boardFeatures[i]);
+            }
+            System.out.printf("Total Score: %d \n", score);
+            System.out.println("-------------------------");
+        }
 
         return score;
     }

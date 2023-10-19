@@ -224,6 +224,15 @@ public class BoardState {
         return toTake.stream().mapToInt(i -> i).toArray();
     }
 
+    /**
+     * Checks the board in one direction if pieces can be taken.
+     * The opposite direction in the same dimension is NOT considered.
+     * @param step1 coordinate of the first step in the desired direction
+     * @param step2 coordinate of the second step in the desired direction
+     * @param step3 coordinate of the third step in the desired direction
+     * @param playerCode 1 for white, -1 for black
+     * @return array coordinate indices of all potential pieces that can be captured
+     */
     public boolean canTakeOneDir(int[] step1, int[] step2, int[] step3, int playerCode) {
         // Check if line is within the board
         if (!(isCoordinateValid(step1) && isCoordinateValid(step2) && isCoordinateValid(step3))) {
@@ -241,12 +250,16 @@ public class BoardState {
 
     /**
      * Returns all indices (1d) of positions where pieces can be taken in the next move.
+     * This function is also intended to return the total number of pieces that could be taken in the next move
+     * as part of the board evaluation.
      * @param playerCode 1 for white, -1 for black
      * @return array of all positions (1d)
      */
     public int[] possibleCapturesNextMove(int playerCode) {
 
+        // Initialise empty list to return later
         ArrayList<Integer> possibleCaptureMoves = new ArrayList<>();
+        // Translate player code into boolean
         boolean whitePlayer = playerCode == 1;
 
         // Iterate along diagonal diagonal
@@ -256,7 +269,9 @@ public class BoardState {
                 if (isCoordinateValid(coord2d) && this.board[coord2dTo1d(coord2d)] == 0) {
                     int[] own = getPiecesToTake(coord2dTo1d(coord2d), whitePlayer);
                     for (int item : own) {
-                        possibleCaptureMoves.add(item);
+                        if (!possibleCaptureMoves.contains(item)) {
+                            possibleCaptureMoves.add(item);
+                        }
                     }
                 }
             }
@@ -316,6 +331,9 @@ public class BoardState {
             countOwn = 0;
             countOpp = 0;
 
+            maxCountOwn = 0;
+            maxCountOpp = 0;
+
             unblockedOwn = 0;
             unblockedOpp = 0;
             tilesInUnblockedOwn = 0;
@@ -348,39 +366,43 @@ public class BoardState {
                         unblockedOwn += 1;
                         unblockedOpp += 1;
                     }
-                    // Update maximum counts
-                    maxCountOwn = (Math.max(countOwn, maxCountOwn));
-                    maxCountOpp = (Math.max(countOpp, maxCountOpp));
 
-                    // Update maximum tiles in unblocked row
-                    if (unblockedOwn >= 5) {
-                        maxTilesInUnblockedOwn = Math.max(maxTilesInUnblockedOwn, tilesInUnblockedOwn);
-                    }
-                    if (unblockedOpp >= 5) {
-                        maxTilesInUnblockedOpp = Math.max(maxTilesInUnblockedOpp, tilesInUnblockedOpp);
-                    }
                 }
-                if (maxCountOwn == 2) {
-                    result[0] += 1;
+
+                // Update maximum counts
+                maxCountOwn = (Math.max(countOwn, maxCountOwn));
+                maxCountOpp = (Math.max(countOpp, maxCountOpp));
+
+                // Update maximum tiles in unblocked row
+                if (unblockedOwn >= 5) {
+                    maxTilesInUnblockedOwn = Math.max(maxTilesInUnblockedOwn, tilesInUnblockedOwn);
                 }
-                if (maxCountOpp == 2) {
-                    result[1] += 1;
+                if (unblockedOpp >= 5) {
+                    maxTilesInUnblockedOpp = Math.max(maxTilesInUnblockedOpp, tilesInUnblockedOpp);
                 }
-                if (maxCountOwn == 3) {
-                    result[2] += 1;
-                }
-                if (maxCountOpp == 3) {
-                    result[3] += 1;
-                }
-                if (maxCountOwn == 4) {
-                    result[4] += 1;
-                }
-                if (maxCountOwn == 4) {
-                    result[5] += 1;
-                }
-                result[6] += maxTilesInUnblockedOwn;
-                result[7] += maxTilesInUnblockedOpp;
+
             }
+            if (maxCountOwn == 2) {
+                result[0] += 1;
+            }
+            if (maxCountOpp == 2) {
+                result[1] += 1;
+            }
+            if (maxCountOwn == 3) {
+                result[2] += 1;
+            }
+            if (maxCountOpp == 3) {
+                result[3] += 1;
+            }
+            if (maxCountOwn == 4) {
+                result[4] += 1;
+            }
+            if (maxCountOpp == 4) {
+                result[5] += 1;
+            }
+            result[6] += maxTilesInUnblockedOwn;
+            result[7] += maxTilesInUnblockedOpp;
+
         }
 
         // Second diagonal
