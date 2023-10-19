@@ -234,7 +234,7 @@ public class GameController {
         }
 
         //TODO: Remove later
-        StateEvaluator.evaluate_v1(this.boardState, this.gameState == 1);
+        StateEvaluator.evaluate_v1(this.boardState);
         System.out.println(this.boardState.possibleCapturesNextMove(1).length);
 
         // Toggle Player Turn
