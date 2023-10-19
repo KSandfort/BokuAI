@@ -233,6 +233,10 @@ public class GameController {
             }
         }
 
+        //TODO: Remove later
+        System.out.println("Pieces to take next move");
+        System.out.println(this.boardState.possibleCapturesNextMove(1).length);
+
         // Toggle Player Turn
         togglePlayerTurn();
         this.appInstance.setWhoToTurnLabel(this.gameState);

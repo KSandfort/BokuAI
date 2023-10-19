@@ -11,12 +11,7 @@ public class StateEvaluator {
     private static final int ROW_OF_2 = 30;
     private static final int ROW_OF_3 = 60;
     private static final int ROW_OF_4 = 90;
-    private static final int OPEN_ROW_OF_2 = 60;
-    private static final int OPEN_ROW_OF_3 = 120;
-    private static final int OPEN_ROW_OF_4 = 180;
-    private static final int GAP_OF_3 = 30;
-    private static final int GAP_OF_2 = 60;
-    private static final int GAP_OF_1 = 90;
+    private static final int MAX_TILES_IN_UNBLOCKED_ROW = 30;
     private static final int CAPTURE_POSSIBLE = 50;
 
     public int evaluate_v1(BoardState boardState, boolean whitePlayer) {
@@ -60,14 +55,10 @@ public class StateEvaluator {
         score -= boardFeatures[3] * ROW_OF_3; // Opp player rows of 3
         score += boardFeatures[4] * ROW_OF_4; // Own player rows of 4
         score -= boardFeatures[5] * ROW_OF_4; // Opp player rows of 4
-        score += boardFeatures[6] * OPEN_ROW_OF_2; // Own player rows of 2
-        score -= boardFeatures[7] * OPEN_ROW_OF_2; // Opp player rows of 2
-        score += boardFeatures[8] * OPEN_ROW_OF_3; // Own player rows of 3
-        score -= boardFeatures[9] * OPEN_ROW_OF_3; // Opp player rows of 3
-        score += boardFeatures[10] * OPEN_ROW_OF_4; // Own player rows of 4
-        score -= boardFeatures[11] * OPEN_ROW_OF_4; // Opp player rows of 4
-        score += boardFeatures[12] * CAPTURE_POSSIBLE; // Own player possible captures
-        score -= boardFeatures[13] * CAPTURE_POSSIBLE; // Opp player possible captures
+        score += boardFeatures[6] * MAX_TILES_IN_UNBLOCKED_ROW; // Own player maximum number of tiles in unblocked row
+        score -= boardFeatures[7] * MAX_TILES_IN_UNBLOCKED_ROW; // Opp player maximum number of tiles in unblocked row
+        score += boardFeatures[8] * CAPTURE_POSSIBLE; // Own player possible captures
+        score -= boardFeatures[9] * CAPTURE_POSSIBLE; // Opp player possible captures
 
         return score;
     }
