@@ -16,20 +16,13 @@ public class StateEvaluator {
     private static final int MAX_TILES_IN_UNBLOCKED_ROW = 30;
     private static final int CAPTURE_POSSIBLE = 50;
 
-    public int evaluate_v1(BoardState boardState, boolean whitePlayer) {
-        short playerCode;
-        if (whitePlayer) {
-            playerCode = 1;
-        }
-        else {
-            playerCode = -1;
-        }
+    public static int evaluate_v1(BoardState boardState) {
 
         // Check for game termination
-        if (boardState.isGameWon(whitePlayer)) {
+        if (boardState.isGameWon(true)) {
             return BOUND;
         }
-        if (boardState.isGameWon(!whitePlayer)) {
+        if (boardState.isGameWon(false)) {
             return -BOUND;
         }
         if (boardState.isDraw()) {
@@ -43,10 +36,10 @@ public class StateEvaluator {
 
         // Get number of pieces for each player
         for (int i = 0; i < boardState.getBoard().length; i++) {
-            if (boardState.getBoard()[i] == playerCode) {
+            if (boardState.getBoard()[i] == 1) {
                 ownPlayerPieces += 1;
             }
-            if (boardState.getBoard()[i] == playerCode * -1) {
+            if (boardState.getBoard()[i] == -1) {
                 oppPlayerPieces += 1;
             }
         }
@@ -55,7 +48,7 @@ public class StateEvaluator {
         score -= oppPlayerPieces * PIECE_COUNT;
 
         // Obtain all board features in one array
-        int[] boardFeatures = boardState.getBoardFeatures(playerCode);
+        int[] boardFeatures = boardState.getBoardFeatures();
         score += boardFeatures[0] * ROW_OF_2; // Own player rows of 2
         score -= boardFeatures[1] * ROW_OF_2; // Opp player rows of 2
         score += boardFeatures[2] * ROW_OF_3; // Own player rows of 3

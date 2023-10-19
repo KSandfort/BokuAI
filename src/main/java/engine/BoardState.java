@@ -129,7 +129,7 @@ public class BoardState {
 
     public boolean isDraw() {
         for (int i = 0; i < this.board.length; i++) {
-            if (this.board[i] == 0 && isCoordinateValid(coord1dTo2d(this.board[i]))) {
+            if (this.board[i] == 0 && isCoordinateValid(coord1dTo2d(i))) {
                 return false;
             }
         }
@@ -300,7 +300,7 @@ public class BoardState {
         return new int[]{index1d / 10, index1d % 10};
     }
 
-    public int[] getBoardFeatures(int playerCode) {
+    public int[] getBoardFeatures() {
         int[] result = new int[14];
         // 0 = Own player rows of 2
         // 1 = Opp player rows of 2
@@ -344,7 +344,7 @@ public class BoardState {
             for (int j = 0; j < 10; j++) { // For each element within the column
                 if (isCoordinateValid(new int[]{i, j})) { // Check validity of cell
                     int cellCode = this.board[coord2dTo1d(new int[]{i, j})];
-                    if (cellCode == playerCode) {
+                    if (cellCode == 1) {
                         countOwn += 1;
                         countOpp = 0;
                         unblockedOwn += 1;
@@ -352,7 +352,7 @@ public class BoardState {
                         tilesInUnblockedOwn += 1;
                         tilesInUnblockedOpp = 0;
                     }
-                    if (cellCode == playerCode * -1) {
+                    if (cellCode == -1) {
                         countOwn = 0;
                         countOpp += 1;
                         unblockedOwn = 0;
@@ -374,6 +374,7 @@ public class BoardState {
                 maxCountOpp = (Math.max(countOpp, maxCountOpp));
 
                 // Update maximum tiles in unblocked row
+                // The purpose of this mechanism is to check if there exists a potential (unblocked) row of length 5
                 if (unblockedOwn >= 5) {
                     maxTilesInUnblockedOwn = Math.max(maxTilesInUnblockedOwn, tilesInUnblockedOwn);
                 }
@@ -402,25 +403,244 @@ public class BoardState {
             }
             result[6] += maxTilesInUnblockedOwn;
             result[7] += maxTilesInUnblockedOpp;
-
         }
 
         // Second diagonal
         for (int i = 0; i < 10; i++) { // For each column
+            countOwn = 0;
+            countOpp = 0;
+
+            maxCountOwn = 0;
+            maxCountOpp = 0;
+
+            unblockedOwn = 0;
+            unblockedOpp = 0;
+            tilesInUnblockedOwn = 0;
+            tilesInUnblockedOpp = 0;
+            maxTilesInUnblockedOwn = 0;
+            maxTilesInUnblockedOpp = 0;
+
             for (int j = 0; j < 10; j++) { // For each element within the column
+                if (isCoordinateValid(new int[]{j, i})) { // Check validity of cell
+                    int cellCode = this.board[coord2dTo1d(new int[]{j, i})];
+                    if (cellCode == 1) {
+                        countOwn += 1;
+                        countOpp = 0;
+                        unblockedOwn += 1;
+                        unblockedOpp = 0;
+                        tilesInUnblockedOwn += 1;
+                        tilesInUnblockedOpp = 0;
+                    }
+                    if (cellCode == -1) {
+                        countOwn = 0;
+                        countOpp += 1;
+                        unblockedOwn = 0;
+                        unblockedOpp += 1;
+                        tilesInUnblockedOwn = 0;
+                        tilesInUnblockedOpp += 1;
+                    }
+                    if (cellCode == 0) {
+                        countOwn = 0;
+                        countOpp = 0;
+                        unblockedOwn += 1;
+                        unblockedOpp += 1;
+                    }
+
+                }
+
+                // Update maximum counts
+                maxCountOwn = (Math.max(countOwn, maxCountOwn));
+                maxCountOpp = (Math.max(countOpp, maxCountOpp));
+
+                // Update maximum tiles in unblocked row
+                // The purpose of this mechanism is to check if there exists a potential (unblocked) row of length 5
+                if (unblockedOwn >= 5) {
+                    maxTilesInUnblockedOwn = Math.max(maxTilesInUnblockedOwn, tilesInUnblockedOwn);
+                }
+                if (unblockedOpp >= 5) {
+                    maxTilesInUnblockedOpp = Math.max(maxTilesInUnblockedOpp, tilesInUnblockedOpp);
+                }
+
             }
+            if (maxCountOwn == 2) {
+                result[0] += 1;
+            }
+            if (maxCountOpp == 2) {
+                result[1] += 1;
+            }
+            if (maxCountOwn == 3) {
+                result[2] += 1;
+            }
+            if (maxCountOpp == 3) {
+                result[3] += 1;
+            }
+            if (maxCountOwn == 4) {
+                result[4] += 1;
+            }
+            if (maxCountOpp == 4) {
+                result[5] += 1;
+            }
+            result[6] += maxTilesInUnblockedOwn;
+            result[7] += maxTilesInUnblockedOpp;
         }
 
         // Vertical
         // Left Side
         for (int i = 0; i < 7; i++) { // For each column
+            countOwn = 0;
+            countOpp = 0;
+
+            maxCountOwn = 0;
+            maxCountOpp = 0;
+
+            unblockedOwn = 0;
+            unblockedOpp = 0;
+            tilesInUnblockedOwn = 0;
+            tilesInUnblockedOpp = 0;
+            maxTilesInUnblockedOwn = 0;
+            maxTilesInUnblockedOpp = 0;
+
             for (int j = 0; j < 10; j++) { // For each element within the column
+                if (isCoordinateValid(new int[]{i + j, j})) { // Check validity of cell
+                    int cellCode = this.board[coord2dTo1d(new int[]{i + j, j})];
+                    if (cellCode == 1) {
+                        countOwn += 1;
+                        countOpp = 0;
+                        unblockedOwn += 1;
+                        unblockedOpp = 0;
+                        tilesInUnblockedOwn += 1;
+                        tilesInUnblockedOpp = 0;
+                    }
+                    if (cellCode == -1) {
+                        countOwn = 0;
+                        countOpp += 1;
+                        unblockedOwn = 0;
+                        unblockedOpp += 1;
+                        tilesInUnblockedOwn = 0;
+                        tilesInUnblockedOpp += 1;
+                    }
+                    if (cellCode == 0) {
+                        countOwn = 0;
+                        countOpp = 0;
+                        unblockedOwn += 1;
+                        unblockedOpp += 1;
+                    }
+
+                }
+
+                // Update maximum counts
+                maxCountOwn = (Math.max(countOwn, maxCountOwn));
+                maxCountOpp = (Math.max(countOpp, maxCountOpp));
+
+                // Update maximum tiles in unblocked row
+                // The purpose of this mechanism is to check if there exists a potential (unblocked) row of length 5
+                if (unblockedOwn >= 5) {
+                    maxTilesInUnblockedOwn = Math.max(maxTilesInUnblockedOwn, tilesInUnblockedOwn);
+                }
+                if (unblockedOpp >= 5) {
+                    maxTilesInUnblockedOpp = Math.max(maxTilesInUnblockedOpp, tilesInUnblockedOpp);
+                }
+
             }
+            if (maxCountOwn == 2) {
+                result[0] += 1;
+            }
+            if (maxCountOpp == 2) {
+                result[1] += 1;
+            }
+            if (maxCountOwn == 3) {
+                result[2] += 1;
+            }
+            if (maxCountOpp == 3) {
+                result[3] += 1;
+            }
+            if (maxCountOwn == 4) {
+                result[4] += 1;
+            }
+            if (maxCountOpp == 4) {
+                result[5] += 1;
+            }
+            result[6] += maxTilesInUnblockedOwn;
+            result[7] += maxTilesInUnblockedOpp;
         }
+
         // Right side
         for (int i = 1; i < 7; i++) { // For each column
+            countOwn = 0;
+            countOpp = 0;
+
+            maxCountOwn = 0;
+            maxCountOpp = 0;
+
+            unblockedOwn = 0;
+            unblockedOpp = 0;
+            tilesInUnblockedOwn = 0;
+            tilesInUnblockedOpp = 0;
+            maxTilesInUnblockedOwn = 0;
+            maxTilesInUnblockedOpp = 0;
+
             for (int j = 0; j < 10; j++) { // For each element within the column
+                if (isCoordinateValid(new int[]{j, i + j})) { // Check validity of cell
+                    int cellCode = this.board[coord2dTo1d(new int[]{j, i + j})];
+                    if (cellCode == 1) {
+                        countOwn += 1;
+                        countOpp = 0;
+                        unblockedOwn += 1;
+                        unblockedOpp = 0;
+                        tilesInUnblockedOwn += 1;
+                        tilesInUnblockedOpp = 0;
+                    }
+                    if (cellCode == -1) {
+                        countOwn = 0;
+                        countOpp += 1;
+                        unblockedOwn = 0;
+                        unblockedOpp += 1;
+                        tilesInUnblockedOwn = 0;
+                        tilesInUnblockedOpp += 1;
+                    }
+                    if (cellCode == 0) {
+                        countOwn = 0;
+                        countOpp = 0;
+                        unblockedOwn += 1;
+                        unblockedOpp += 1;
+                    }
+
+                }
+
+                // Update maximum counts
+                maxCountOwn = (Math.max(countOwn, maxCountOwn));
+                maxCountOpp = (Math.max(countOpp, maxCountOpp));
+
+                // Update maximum tiles in unblocked row
+                // The purpose of this mechanism is to check if there exists a potential (unblocked) row of length 5
+                if (unblockedOwn >= 5) {
+                    maxTilesInUnblockedOwn = Math.max(maxTilesInUnblockedOwn, tilesInUnblockedOwn);
+                }
+                if (unblockedOpp >= 5) {
+                    maxTilesInUnblockedOpp = Math.max(maxTilesInUnblockedOpp, tilesInUnblockedOpp);
+                }
+
             }
+            if (maxCountOwn == 2) {
+                result[0] += 1;
+            }
+            if (maxCountOpp == 2) {
+                result[1] += 1;
+            }
+            if (maxCountOwn == 3) {
+                result[2] += 1;
+            }
+            if (maxCountOpp == 3) {
+                result[3] += 1;
+            }
+            if (maxCountOwn == 4) {
+                result[4] += 1;
+            }
+            if (maxCountOpp == 4) {
+                result[5] += 1;
+            }
+            result[6] += maxTilesInUnblockedOwn;
+            result[7] += maxTilesInUnblockedOpp;
         }
 
         // Add scores for pieces to take
