@@ -7,11 +7,16 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MoveNode implements Comparable<MoveNode> {
+
     private int score = 0;
     private BoardState boardState;
+    int newTile = -1;
+    int captureTile = -1;
 
-    public MoveNode(BoardState bs) {
+    public MoveNode(BoardState bs, int nt, int ct) {
         this.boardState = bs;
+        this.newTile = nt;
+        this.captureTile = ct;
     }
 
     public MoveNode(BoardState bs, MoveNode pn) {
@@ -21,7 +26,7 @@ public class MoveNode implements Comparable<MoveNode> {
 
     private MoveNode parentNode;
 
-    public void evaluate() {
+    public void heuristicEvaluation() {
         this.score = StateEvaluator.evaluate_v1(this.boardState);
     }
 

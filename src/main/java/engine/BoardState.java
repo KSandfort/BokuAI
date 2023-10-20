@@ -15,7 +15,7 @@ import java.util.List;
 public class BoardState {
 
     private int[] board;
-    private boolean whiteToMove;
+    public boolean whiteToMove;
     private int blockedCoordinate = -1;
 
     public BoardState() {
@@ -35,6 +35,25 @@ public class BoardState {
         }
         // Place the piece on the board
         this.board[positionIndex] = playerValue;
+    }
+
+    public BoardState(BoardState oldBoard, boolean whiteMove) {
+        this.board = oldBoard.getBoard().clone();
+        this.whiteToMove = whiteMove;
+    }
+
+    /**
+     * Creates a new board where a piece gets taken.
+     * This function is used purely for generating board states in
+     * the agent's decision process and not in the actual game.
+     * @param positionIndex position index of the piece to take
+     * @return new board state after the capture of a piece
+     */
+    public BoardState agentPieceCapture(int positionIndex) {
+        BoardState newBoard = new BoardState(this, this.whiteToMove);
+        newBoard.getBoard()[positionIndex] = 0;
+        newBoard.setBlockedCoordinate(positionIndex);
+        return newBoard;
     }
 
     public int[] getPossibleMoves() {
