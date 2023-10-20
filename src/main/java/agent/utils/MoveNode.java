@@ -14,6 +14,13 @@ public class MoveNode implements Comparable<MoveNode> {
         this.boardState = bs;
     }
 
+    public MoveNode(BoardState bs, MoveNode pn) {
+        this.boardState = bs;
+        this.parentNode = pn;
+    }
+
+    private MoveNode parentNode;
+
     public void evaluate() {
         this.score = StateEvaluator.evaluate_v1(this.boardState);
     }

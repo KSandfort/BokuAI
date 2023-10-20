@@ -4,8 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+
 
 @Getter
 @Setter
@@ -14,9 +14,9 @@ import java.util.List;
  */
 public class BoardState {
 
-    int[] board;
-    boolean whiteToMove;
-    int blockedCoordinate = -1;
+    private int[] board;
+    private boolean whiteToMove;
+    private int blockedCoordinate = -1;
 
     public BoardState() {
         this.board = new int[100];
