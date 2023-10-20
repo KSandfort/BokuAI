@@ -21,8 +21,7 @@ public class MinimaxPlayer extends Player {
         return this.indexNextPieceToTake;
     }
 
-    private int[] MiniMax(BoardState boardState, int maxDepth) {
-        // Get possible positions, including captures
+    private ArrayList<MoveNode> getChildNodes(BoardState boardState) {
         ArrayList<MoveNode> moveNodes = new ArrayList<>();
         int[] possibleMoves = boardState.getPossibleMoves();
         for (int i : possibleMoves) {
@@ -44,6 +43,13 @@ public class MinimaxPlayer extends Player {
                 }
             }
         }
+        return moveNodes;
+    }
+
+    private int[] MiniMax(BoardState boardState, int maxDepth) {
+        // Get possible positions, including captures
+        ArrayList<MoveNode> moveNodes = getChildNodes(boardState);
+
         // Iterate over all possible positions and return max score
         for(MoveNode moveNode : moveNodes) {
             alphaBeta(moveNode, maxDepth - 1, -1000, 1000, !this.isWhitePlayer); // Start with min
@@ -92,34 +98,33 @@ public class MinimaxPlayer extends Player {
             }
         }
 
+        // Create list of all child nodes (without evaluation)
+        ArrayList<MoveNode> childNodes = getChildNodes(moveNode.getBoardState());
+
         if (maximizingPlayer) {
-            int bestValue = Integer.MIN_VALUE;
-            for (child in node's children):
-                int value = alphaBeta(child, depth - 1, false, alpha, beta);
-                int bestValue = max(bestValue, value);
-                alpha = max(alpha, bestValue)
-                if beta <= alpha:
-                    break;  // Beta cutoff
-            return bestValue
-            // Get score
-            // For every child
-            // Value = recursive call
+            int bestValue = -100000;
+            for (MoveNode child : childNodes) {
+                int value = alphaBeta(child, depth - 1, alpha, beta, !maximizingPlayer);
+                bestValue = Math.max(bestValue, value);
+                alpha = Math.max(alpha, bestValue);
+                if (beta <= alpha) {
+                    break;  // Beta cutoff | Do da fancy pruning \(*_*)/
+                }
+            }
+            return bestValue;
 
-            // if (value > score) -> score = value
-            // if (score > alpha) -> alpha = score
-            // if (score >= beta) -> break (PRUNING)
-
-            // return score
         }
         else {
-            int bestValue = Integer.MAX_VALUE;
-            for (child in node's children)
-                value = minimax(child, depth - 1, true, alpha, beta)
-                bestValue = min(bestValue, value)
-                beta = min(beta, bestValue)
-                if beta <= alpha:
-                    break  # Alpha cutoff
-            return bestValue
+            int bestValue = 100000;
+            for (MoveNode child : childNodes) {
+                int value = alphaBeta(child, depth - 1, alpha, beta, !maximizingPlayer);
+                bestValue = Math.min(bestValue, value);
+                beta = Math.min(beta, bestValue);
+                if (beta <= alpha) {
+                    break; // Alpha cutoff | Do da fancy pruning \(*_*)/
+                }
+            }
+            return bestValue;
         }
     }
 }
