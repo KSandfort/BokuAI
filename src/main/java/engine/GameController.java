@@ -69,7 +69,7 @@ public class GameController {
         // Agent vs Human
         if (!(this.player1 instanceof HumanPlayer) && this.player2 instanceof HumanPlayer) {
             this.agentVsHuman = true;
-            this.executeMove(player2.getMove(this.boardState));
+            this.executeMove(player1.getMove(this.boardState));
         }
 
         // Agent vs Agent - Enter game loop
@@ -91,33 +91,6 @@ public class GameController {
 
         this.bokuBoard.updateGUI(this.boardState);
     }
-
-    /*
-    private void gameLoopAgentVsAgent() {
-        do {
-            // If player 1 is an agent, perform action
-            if (this.gameState == 1) {
-                this.executeMove(player1.getMove(this.boardState));
-            }
-            // If player 1 is an agent, perform action
-            else if (this.gameState == 2) {
-                this.executeMove(player2.getMove(this.boardState));
-            }
-
-            Platform.runLater(() -> {
-                this.bokuBoard.updateGUI(this.boardState);
-            });
-
-            try {
-                Platform.runLater(() -> this.bokuBoard.updateGUI(this.getBoardState()));
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        while (this.gameState != 3 && this.gameState != 4);
-    }
-    */
 
     /**
      * Attempts to make a move when a human player clicks a tile to place a stone

@@ -10,7 +10,7 @@ public class MoveNode implements Comparable<MoveNode> {
 
     private int score = 0;
     private BoardState boardState;
-    int newTile = -1;
+    int newTile;
     int captureTile = -1;
 
     public MoveNode(BoardState bs, int nt, int ct) {
@@ -19,12 +19,10 @@ public class MoveNode implements Comparable<MoveNode> {
         this.captureTile = ct;
     }
 
-    public MoveNode(BoardState bs, MoveNode pn) {
+    public MoveNode(BoardState bs, int nt) {
         this.boardState = bs;
-        this.parentNode = pn;
+        this.newTile = nt;
     }
-
-    private MoveNode parentNode;
 
     public void heuristicEvaluation() {
         this.score = StateEvaluator.evaluate_v1(this.boardState);

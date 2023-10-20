@@ -53,7 +53,6 @@ public class BokuBoard extends Pane {
                             throw new RuntimeException(ex);
                         }
                     });
-                    // on click
                     hexagons.add(hs);
                     this.getChildren().add(hs);
                 }

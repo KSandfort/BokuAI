@@ -5,15 +5,15 @@ import engine.BoardState;
 public class StateEvaluator {
     //Todo: Add multiple evaluation methods that can be called
 
-    private static final boolean DEBUG_LOG = true;
+    private static final boolean DEBUG_LOG = false;
 
     // Feature weights
     private static final int BOUND = 100000;
-    private static final int PIECE_COUNT = 1;
-    private static final int ROW_OF_2 = 30;
-    private static final int ROW_OF_3 = 60;
-    private static final int ROW_OF_4 = 90;
-    private static final int MAX_TILES_IN_UNBLOCKED_ROW = 30;
+    private static final int PIECE_COUNT = 200;
+    private static final int ROW_OF_2 = 20;
+    private static final int ROW_OF_3 = 100;
+    private static final int ROW_OF_4 = 200;
+    private static final int MAX_TILES_IN_UNBLOCKED_ROW = 40;
     private static final int CAPTURE_POSSIBLE = 50;
 
     public static int evaluate_v1(BoardState boardState) {
