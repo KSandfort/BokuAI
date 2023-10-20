@@ -53,7 +53,9 @@ public class GameController {
         gameState = 1;
         moveCount = 0;
         this.player1 = this.getPlayerInstanceByName(player1Selection);
+        player1.isWhitePlayer = true;
         this.player2 = this.getPlayerInstanceByName(player2Selection);
+        player2.isWhitePlayer = false;
         if (DEBUG_LOG) {
             System.out.println("Starting game");
         }

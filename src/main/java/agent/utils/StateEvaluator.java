@@ -8,7 +8,7 @@ public class StateEvaluator {
     private static final boolean DEBUG_LOG = true;
 
     // Feature weights
-    private static final int BOUND = 1000;
+    private static final int BOUND = 100000;
     private static final int PIECE_COUNT = 1;
     private static final int ROW_OF_2 = 30;
     private static final int ROW_OF_3 = 60;
@@ -26,7 +26,7 @@ public class StateEvaluator {
             return -BOUND;
         }
         if (boardState.isDraw()) {
-            return -1000;
+            return -BOUND;
         }
 
         // Init score
