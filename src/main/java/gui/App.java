@@ -6,10 +6,7 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -17,10 +14,17 @@ import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * This class executes the game application.
+ * @author      Konstantin Sandfort
+ * @version     1.0
+ * @since       Oct 2023
+ */
 @Getter
 @Setter
 public class App extends Application {
 
+    // System.out debug flag
     static final boolean DEBUG_LOG = true;
 
     // Engine
@@ -54,8 +58,6 @@ public class App extends Application {
     VBox statsPanel = new VBox();
     TextArea moveHistoryField = new TextArea("History of all moves");
 
-    // TODO: control panel, info board, console, ...
-
     public static void main(String[] args) {
         launch(args);
     }
@@ -64,7 +66,7 @@ public class App extends Application {
     public void start(Stage primaryStage) {
 
         // Window properties
-        primaryStage.setTitle("Boku");
+        primaryStage.setTitle("Boku Game");
         primaryStage.setResizable(false);
 
         // Layout
@@ -159,7 +161,10 @@ public class App extends Application {
         primaryStage.show();
     }
 
-
+    /**
+     * Changes the label of who's turn it is.
+     * @param gameState Current game state of the game controller.
+     */
     public void setWhoToTurnLabel(int gameState) {
         if (gameState == 1) {
             whoToTurnLabel.setText("White to turn!");
@@ -167,5 +172,24 @@ public class App extends Application {
         else if (gameState == 2) {
             whoToTurnLabel.setText("Black to turn!");
         }
+    }
+
+    /**
+     * Displays a new information window with the information that a player has won the game.
+     * @param whitePlayer flag if the white player has won
+     */
+    public void displayGameWonWindow(boolean whitePlayer) {
+        Alert a = new Alert(Alert.AlertType.INFORMATION);
+        String infoString;
+        if (whitePlayer) {
+            infoString = " <<< White Player Won The Game! >>> ";
+        }
+        else {
+            infoString = " <<< Black Player Won The Game! >>> ";
+        }
+        a.setTitle("Game Over!");
+        a.setHeaderText(infoString);
+        a.setContentText("You can close the application now!");
+        a.showAndWait().ifPresent(rs -> {});
     }
 }

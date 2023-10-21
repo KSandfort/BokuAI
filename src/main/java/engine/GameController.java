@@ -4,7 +4,6 @@ import agent.HumanPlayer;
 import agent.MinimaxPlayer;
 import agent.Player;
 import agent.RandomPlayer;
-import agent.utils.StateEvaluator;
 import gui.App;
 import gui.BokuBoard;
 import gui.Hexagon;
@@ -23,7 +22,6 @@ public class GameController {
     private App appInstance;
 
     private static boolean DEBUG_LOG = true;
-
     BokuBoard bokuBoard;
 
     // State properties
@@ -31,11 +29,8 @@ public class GameController {
     private int moveCount;
     private Player player1;
     private Player player2;
-
     private BoardState boardState;
-
     private List<BoardState> boardStateHistory;
-
     private boolean humanVsAgent = false;
     private boolean agentVsHuman = false;
 
@@ -49,6 +44,11 @@ public class GameController {
         this.boardStateHistory.add(boardState);
     }
 
+    /**
+     * Initialises a new game.
+     * @param player1Selection player 1 type name
+     * @param player2Selection player 2 type name
+     */
     public void initNewGame(String player1Selection, String player2Selection) {
         gameState = 1;
         moveCount = 0;
@@ -79,6 +79,9 @@ public class GameController {
 
     }
 
+    /**
+     * Continues the game for one step in an agent vs agent environment.
+     */
     public void agentVsAgentOneStep() {
         // If player 1 is an agent, perform action
         if (this.gameState == 1) {
@@ -121,6 +124,10 @@ public class GameController {
         }
     }
 
+    /**
+     * Executes a move on the board.
+     * @param coordinateIndex Index of where the new tile should be placed.
+     */
     public void executeMove(int coordinateIndex) {
         // Update Backend
         BoardState newBoardState;
@@ -167,6 +174,7 @@ public class GameController {
             else {
                 this.gameState = 4;
             }
+            appInstance.displayGameWonWindow(whitePlayer);
         }
 
         // Check for draw
@@ -179,8 +187,10 @@ public class GameController {
         int[] piecesToTake = boardState.getPiecesToTake(coordinateIndex, whitePlayer);
         if (piecesToTake.length != 0) {
             // Execute logic to take a piece
-            System.out.println("PIECES TO TAKE");
-            System.out.println(Arrays.toString(piecesToTake));
+            if (DEBUG_LOG) {
+                System.out.println("PIECES TO TAKE");
+                System.out.println(Arrays.toString(piecesToTake));
+            }
 
             // Set game state
             if (whitePlayer) {
@@ -208,10 +218,6 @@ public class GameController {
             }
         }
 
-        //TODO: Remove later
-        StateEvaluator.evaluate_v1(this.boardState);
-        System.out.println(this.boardState.possibleCapturesNextMove(1).length);
-
         // Toggle Player Turn
         togglePlayerTurn();
         this.appInstance.setWhoToTurnLabel(this.gameState);
@@ -225,6 +231,10 @@ public class GameController {
         }
     }
 
+    /**
+     * Removes a single piece off the current board
+     * @param coordinateIndex index of the piece to be removed
+     */
     public void removePiece(int coordinateIndex) {
         // Update back end
         this.boardState.getBoard()[coordinateIndex] = 0;
@@ -251,6 +261,9 @@ public class GameController {
         }
     }
 
+    /**
+     * Toggles the game state to alternate between white and black.
+     */
     private void togglePlayerTurn() {
         if (this.gameState == 1) {
             this.gameState = 2;
@@ -260,6 +273,9 @@ public class GameController {
         }
     }
 
+    /**
+     * Undo for a single move.
+     */
     public void undoSingleMove() {
         // Get board state from history
         this.boardState = this.boardStateHistory.get(this.boardStateHistory.size() - 2);
@@ -272,13 +288,17 @@ public class GameController {
         else if (this.gameState == 2) {
             this.gameState = 1;
         }
-
         this.moveCount -= 1;
 
         // Update GUI
         bokuBoard.updateGUI(this.boardState);
     }
 
+    /**
+     * Generates a new player instance of a type determined by the name.
+     * @param name player type name
+     * @return new player instance
+     */
     private Player getPlayerInstanceByName(String name) {
         if (name.equals("Human Player")) {
             return new HumanPlayer();
@@ -289,7 +309,6 @@ public class GameController {
         if (name.equals("Minimax")) {
             return new MinimaxPlayer();
         }
-
         return new HumanPlayer();
     }
 }

@@ -3,6 +3,7 @@ package agent;
 import agent.utils.MoveNode;
 import engine.BoardState;
 
+import javax.swing.plaf.synth.SynthOptionPaneUI;
 import java.util.ArrayList;
 
 public class MinimaxPlayer extends Player {
@@ -18,7 +19,6 @@ public class MinimaxPlayer extends Player {
         int[] nextMoveCoordinate = MiniMax(boardState, 4);
 
         this.indexNextPieceToTake = nextMoveCoordinate[1]; // Extract second index (in case of capture)
-        System.out.println("INDEX OF NEXT PIECE TO TAKE " + this.indexNextPieceToTake);
         return nextMoveCoordinate[0];
     }
 
@@ -35,12 +35,11 @@ public class MinimaxPlayer extends Player {
                 // Create new board state and consider if a piece can be taken
                 BoardState newBoardState = new BoardState(boardState, !boardState.whiteToMove, i);
                 // Check for capture
-                int[] piecesToTake = newBoardState.getPiecesToTake(i, boardState.whiteToMove);
+                int[] piecesToTake = newBoardState.getPiecesToTake(i, !boardState.whiteToMove);
                 if (piecesToTake.length != 0) {
                     for (int t : piecesToTake) {
                         BoardState takeBoardState = newBoardState.agentPieceCapture(t);
                         MoveNode newMoveNode = new MoveNode(takeBoardState, i, t);
-                        //System.out.println(">>>>>> I created a new move node with " + newMoveNode.getNewTile() + " " + newMoveNode.getCaptureTile());
                         moveNodes.add(newMoveNode);
                     }
                 }
@@ -57,7 +56,6 @@ public class MinimaxPlayer extends Player {
     private int[] MiniMax(BoardState boardState, int maxDepth) {
         // Get possible positions, including captures
         ArrayList<MoveNode> moveNodes = getChildNodes(boardState);
-
         // Iterate over all possible positions and return max score
         for(MoveNode moveNode : moveNodes) {
             int score = alphaBeta(moveNode, maxDepth - 1, -1000, 1000, !this.isWhitePlayer); // Start with min
@@ -87,7 +85,6 @@ public class MinimaxPlayer extends Player {
         }
 
         // Return new array with position of where to place the next tile and in case of a capture where to take one.
-        System.out.printf(">>>>>>>> Selected move node: %d, %d\n", moveNodes.get(maxIndex).getNewTile(), moveNodes.get(maxIndex).getCaptureTile());
         int index0Value = moveNodes.get(maxIndex).getNewTile();
         int index1Value = moveNodes.get(maxIndex).getCaptureTile();
         System.out.printf("Index1 value = %d\n", index1Value);
