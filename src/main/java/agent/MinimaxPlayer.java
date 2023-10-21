@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 public class MinimaxPlayer extends Player {
 
+    private static final int MAX_SEARCH_DEPTH = 3;
     int indexNextPieceToTake = -1; // Keeps the next piece to take accessible in memory
     int nodesCreatedCount = 0;
     int nodesEvaluatedCount = 0;
@@ -16,7 +17,7 @@ public class MinimaxPlayer extends Player {
     public int getMove(BoardState boardState) {
         this.nodesCreatedCount = 0;
         this.nodesEvaluatedCount = 0;
-        int[] nextMoveCoordinate = MiniMax(boardState, 4);
+        int[] nextMoveCoordinate = MiniMax(boardState, MAX_SEARCH_DEPTH);
 
         this.indexNextPieceToTake = nextMoveCoordinate[1]; // Extract second index (in case of capture)
         return nextMoveCoordinate[0];

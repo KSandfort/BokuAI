@@ -209,11 +209,11 @@ public class GameController {
             else {
                 if (this.gameState == 5) {
                     removePiece(player1.getPieceToTake(piecesToTake));
-                    this.gameState = 2;
+                    this.gameState = 1;
                 }
                 else {
                     removePiece(player2.getPieceToTake(piecesToTake));
-                    this.gameState = 1;
+                    this.gameState = 2;
                 }
             }
         }
