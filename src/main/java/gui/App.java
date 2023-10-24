@@ -53,10 +53,10 @@ public class App extends Application {
     Button continueButton = new Button("Continue (Agent vs Agent");
 
     HBox infoPanel = new HBox();
-    Label totalTimeElapsedLabel = new Label("00:00");
+    Label wPlayerTimeElapsedLabel = new Label("00:00");
+    Label bPlayerTimeElapsedLabel = new Label("00:00");
     Label whoToTurnLabel = new Label("Game not started yet");
     VBox statsPanel = new VBox();
-    TextArea moveHistoryField = new TextArea("History of all moves");
 
     public static void main(String[] args) {
         launch(args);
@@ -80,8 +80,9 @@ public class App extends Application {
         infoPanel.setPadding(new Insets(20, 20, 20, 20));
         infoPanel.setSpacing(20);
 
-        infoPanel.getChildren().add(totalTimeElapsedLabel);
+        infoPanel.getChildren().add(wPlayerTimeElapsedLabel);
         infoPanel.getChildren().add(whoToTurnLabel);
+        infoPanel.getChildren().add(bPlayerTimeElapsedLabel);
 
         // --- Control Panel Setup ---
         controlPanel.setAlignment(Pos.CENTER);
@@ -133,9 +134,6 @@ public class App extends Application {
         statsPanel.setAlignment(Pos.CENTER);
         statsPanel.setPadding(new Insets(20, 20, 20, 20));
         statsPanel.setSpacing(20);
-        statsPanel.getChildren().add(moveHistoryField);
-        moveHistoryField.setEditable(false);
-        moveHistoryField.setPrefColumnCount(20);
 
         // --- Root Panel Setup ---
         root.setCenter(board);
@@ -144,19 +142,6 @@ public class App extends Application {
         root.setRight(statsPanel);
 
         primaryStage.setScene(new Scene(root, windowWidth, windowHeight));
-
-        AnimationTimer animator = new AnimationTimer() {
-            long startTime = System.nanoTime();
-            @Override
-            public void handle(long arg0) {
-                long currentTime = System.nanoTime();
-                if (FPS <= (currentTime - startTime)) {
-                    gameController.getBokuBoard().updateGUI(gameController.getBoardState());
-                    startTime = currentTime;
-                }
-            }
-        };
-        animator.start();
 
         primaryStage.show();
     }

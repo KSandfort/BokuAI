@@ -4,6 +4,7 @@ import agent.HumanPlayer;
 import agent.MinimaxPlayer;
 import agent.Player;
 import agent.RandomPlayer;
+import agent.utils.TurnTimer;
 import gui.App;
 import gui.BokuBoard;
 import gui.Hexagon;
@@ -33,6 +34,8 @@ public class GameController {
     private List<BoardState> boardStateHistory;
     private boolean humanVsAgent = false;
     private boolean agentVsHuman = false;
+    TurnTimer whiteTimer = new TurnTimer();
+    TurnTimer blackTimer = new TurnTimer();
 
     public GameController(App appInstance) {
         this.appInstance = appInstance;
@@ -75,6 +78,14 @@ public class GameController {
         // Agent vs Agent - Enter game loop
         if (!(this.player1 instanceof HumanPlayer || this.player2 instanceof HumanPlayer)) {
             //gameLoopAgentVsAgent();
+        }
+
+        if (this.player1 instanceof HumanPlayer) {
+            this.whiteTimer.startLogTime(System.currentTimeMillis());
+        }
+
+        if (this.player2 instanceof HumanPlayer) {
+            this.blackTimer.startLogTime(System.currentTimeMillis());
         }
 
     }
@@ -219,6 +230,17 @@ public class GameController {
         }
 
         // Toggle Player Turn
+        long timeStamp = System.currentTimeMillis();
+        if (this.gameState == 1) {
+            whiteTimer.stopLogTime(timeStamp);
+            blackTimer.startLogTime(timeStamp);
+            this.appInstance.getWPlayerTimeElapsedLabel().setText(whiteTimer.getTimeLabel());
+        }
+        if (this.gameState == 2) {
+            blackTimer.stopLogTime(timeStamp);
+            whiteTimer.startLogTime(timeStamp);
+            this.appInstance.getBPlayerTimeElapsedLabel().setText(blackTimer.getTimeLabel());
+        }
         togglePlayerTurn();
         this.appInstance.setWhoToTurnLabel(this.gameState);
 
