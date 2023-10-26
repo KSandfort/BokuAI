@@ -18,12 +18,10 @@ public class BoardState {
     private int[] board;
     public boolean whiteToMove;
     private int blockedCoordinate = -1;
-    private int boardHash;
 
     public BoardState() {
         this.board = new int[100];
         this.whiteToMove = true;
-        this.boardHash = 0;
     }
 
     public BoardState(BoardState oldBoard, boolean whiteMove, int positionIndex) {
@@ -38,13 +36,11 @@ public class BoardState {
         }
         // Place the piece on the board
         this.board[positionIndex] = playerValue;
-        this.boardHash = HashUtils.getHash(this.boardHash, whiteMove, positionIndex, 0);
     }
 
     public BoardState(BoardState oldBoard, boolean whiteMove) {
         this.board = oldBoard.getBoard().clone();
         this.whiteToMove = whiteMove;
-        this.boardHash = oldBoard.boardHash;
     }
 
     /**
@@ -58,7 +54,6 @@ public class BoardState {
         BoardState newBoard = new BoardState(this, this.whiteToMove);
         newBoard.getBoard()[positionIndex] = 0;
         newBoard.setBlockedCoordinate(positionIndex);
-        newBoard.setBoardHash(HashUtils.getHash(this.boardHash, this.whiteToMove, 0, positionIndex));
         return newBoard;
     }
 

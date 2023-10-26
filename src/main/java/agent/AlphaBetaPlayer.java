@@ -12,12 +12,14 @@ public class AlphaBetaPlayer extends Player {
     int indexNextPieceToTake = -1; // Keeps the next piece to take accessible in memory
     int nodesCreatedCount = 0;
     int nodesEvaluatedCount = 0;
+    int pruningCount = 0;
     Hashtable<Integer, MoveNode> transpositionTable = new Hashtable<>();
 
     @Override
     public int getMove(BoardState boardState) {
         this.nodesCreatedCount = 0;
         this.nodesEvaluatedCount = 0;
+        this.pruningCount = 0;
         int[] nextMoveCoordinate = MiniMax(boardState);
         this.indexNextPieceToTake = nextMoveCoordinate[1]; // Extract second index (in case of capture)
 
@@ -26,17 +28,23 @@ public class AlphaBetaPlayer extends Player {
             this.gameController.getPsWhite().setLastMoveIndex(nextMoveCoordinate[0]);
             this.gameController.getPsWhite().setLastTakeIndex(this.indexNextPieceToTake);
             this.gameController.getPsWhite().setNodesCreated(this.nodesCreatedCount);
-            this.gameController.getPsWhite().setTotalNodesCreated(this.gameController.getPsWhite().getTotalNodesCreated() + this.nodesCreatedCount);
             this.gameController.getPsWhite().setNodesEvaluated(this.nodesEvaluatedCount);
+            this.gameController.getPsWhite().setPruningCount(this.pruningCount);
+            this.gameController.getPsWhite().setTotalNodesCreated(this.gameController.getPsWhite().getTotalNodesCreated() + this.nodesCreatedCount);
             this.gameController.getPsWhite().setTotalNodesEvaluated(this.gameController.getPsWhite().getTotalNodesEvaluated() + this.nodesEvaluatedCount);
+            this.gameController.getPsWhite().setTotalPruningCount(this.gameController.getPsWhite().getTotalPruningCount() + this.pruningCount);
+            this.gameController.getPsWhite().setTranspositionTableSize(this.transpositionTable.size());
         }
         else {
             this.gameController.getPsBlack().setLastMoveIndex(nextMoveCoordinate[0]);
             this.gameController.getPsBlack().setLastTakeIndex(this.indexNextPieceToTake);
             this.gameController.getPsBlack().setNodesCreated(this.nodesCreatedCount);
-            this.gameController.getPsBlack().setTotalNodesCreated(this.gameController.getPsBlack().getTotalNodesCreated() + this.nodesCreatedCount);
             this.gameController.getPsBlack().setNodesEvaluated(this.nodesEvaluatedCount);
+            this.gameController.getPsBlack().setPruningCount(this.pruningCount);
+            this.gameController.getPsBlack().setTotalNodesCreated(this.gameController.getPsBlack().getTotalNodesCreated() + this.nodesCreatedCount);
             this.gameController.getPsBlack().setTotalNodesEvaluated(this.gameController.getPsBlack().getTotalNodesEvaluated() + this.nodesEvaluatedCount);
+            this.gameController.getPsBlack().setTotalPruningCount(this.gameController.getPsBlack().getTotalPruningCount() + this.pruningCount);
+            this.gameController.getPsBlack().setTranspositionTableSize(this.transpositionTable.size());
         }
         return nextMoveCoordinate[0];
     }
@@ -75,6 +83,7 @@ public class AlphaBetaPlayer extends Player {
                 }
             }
         }
+        // Update count of created nodes
         nodesCreatedCount += moveNodes.size();
         return moveNodes;
     }
@@ -126,16 +135,14 @@ public class AlphaBetaPlayer extends Player {
     }
 
     private int alphaBeta(MoveNode moveNode, int depth, int alpha, int beta, boolean maximizingPlayer) {
+        if (transpositionTable.containsKey(moveNode.getBoardHash())) {
+            return transpositionTable.get(moveNode.getBoardHash()).getScore();
+        }
         // If max search depth is reached
         if (depth <= 0) {
-            if (transpositionTable.contains(moveNode.getBoardState().getBoardHash())) {
-                return transpositionTable.get(moveNode.getBoardState().getBoardHash()).getScore();
-            }
-            else {
-                moveNode.heuristicEvaluation();
-                nodesEvaluatedCount += 1;
-                transpositionTable.put(moveNode.getBoardState().getBoardHash(), moveNode);
-            }
+            moveNode.heuristicEvaluation();
+            nodesEvaluatedCount += 1;
+            transpositionTable.put(moveNode.getBoardHash(), moveNode);
             return moveNode.getScore();
         }
         // If node is terminal
@@ -159,6 +166,7 @@ public class AlphaBetaPlayer extends Player {
                 bestValue = Math.max(bestValue, value);
                 alpha = Math.max(alpha, bestValue);
                 if (beta <= alpha) {
+                    this.pruningCount++;
                     break;  // Beta cutoff | Do da fancy pruning \(*_*)/
                 }
             }
@@ -166,13 +174,13 @@ public class AlphaBetaPlayer extends Player {
 
         }
         else {
-            System.out.println("At least I tried");
             int bestValue = 100000;
             for (MoveNode child : childNodes) {
                 int value = alphaBeta(child, depth - 1, alpha, beta, true);
                 bestValue = Math.min(bestValue, value);
                 beta = Math.min(beta, bestValue);
                 if (beta <= alpha) {
+                    this.pruningCount++;
                     break; // Alpha cutoff | Do da fancy pruning \(*_*)/
                 }
             }

@@ -61,6 +61,7 @@ public class GameController {
         bokuBoard.updateGUI(boardState);
         whiteTimer = new TurnTimer();
         blackTimer = new TurnTimer();
+        this.appInstance.getStartButton().setDisable(false);
     }
 
     /**
@@ -71,6 +72,8 @@ public class GameController {
     public void initNewGame(String player1Selection, String player2Selection) {
         gameState = 1;
         moveCount = 0;
+
+        this.appInstance.getStartButton().setDisable(true);
 
         psWhite = new PlayerStatistics(true);
         psWhite.setPlayerType(player1Selection);

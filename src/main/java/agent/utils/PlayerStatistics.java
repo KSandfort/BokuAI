@@ -12,8 +12,11 @@ public class PlayerStatistics {
     int lastTakeIndex;
     int nodesCreated;
     int nodesEvaluated;
+    int pruningCount;
     int totalNodesCreated;
     int totalNodesEvaluated;
+    int totalPruningCount;
+    int transpositionTableSize;
 
     public PlayerStatistics(boolean white) {
         this.isWhitePlayer = white;
@@ -38,10 +41,14 @@ public class PlayerStatistics {
         output += "Last Capture: \t" + lastTakeIndex + "\n";
         output += "Nodes Created: \t" + nodesCreated + "\n";
         output += "Nodes Evaluated: \t" + nodesEvaluated + "\n";
+        output += "Pruning Count: \t" + pruningCount + "\n";
         output += "---------------------\n";
         output += "Total:\n";
         output += "Nodes Created: \t" + this.totalNodesCreated + "\n";
-        output += "Nodes Evaluated: \t" + this.totalNodesEvaluated+ "\n";
+        output += "Nodes Evaluated: \t" + this.totalNodesEvaluated + "\n";
+        output += "Pruning Count: \t" + totalPruningCount + "\n";
+        output += "---------------------\n";
+        output += "TT Size: \t" + this.transpositionTableSize + "\n";
         return output;
     }
 }
