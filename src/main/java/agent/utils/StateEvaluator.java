@@ -16,7 +16,10 @@ public class StateEvaluator {
     private static final int ROW_OF_2 = 10;
     private static final int ROW_OF_3 = 200;
     private static final int ROW_OF_4 = 1000;
-    private static final int MAX_TILES_IN_UNBLOCKED_ROW = 10;
+
+    private static final int ROW_OF_3_BOTH_OPEN = 300;
+    private static final int ROW_OF_4_ONE_OPEN = 2000;
+    private static final int ROW_OF_4_BOTH_OPEN = 10000;
     private static final int CAPTURE_POSSIBLE = 30;
 
     public static int evaluate_v1(BoardState boardState) {
@@ -60,8 +63,16 @@ public class StateEvaluator {
         score -= boardFeatures[5] * ROW_OF_4; // Opp player rows of 4
         //score += boardFeatures[6] * MAX_TILES_IN_UNBLOCKED_ROW; // Own player maximum number of tiles in unblocked row
         //score -= boardFeatures[7] * MAX_TILES_IN_UNBLOCKED_ROW; // Opp player maximum number of tiles in unblocked row
-        score += boardFeatures[8] * CAPTURE_POSSIBLE; // Own player possible captures
-        score -= boardFeatures[9] * CAPTURE_POSSIBLE; // Opp player possible captures
+        score += boardFeatures[6] * CAPTURE_POSSIBLE; // Own player possible captures
+        score -= boardFeatures[7] * CAPTURE_POSSIBLE; // Opp player possible captures
+
+        score += boardFeatures[8] * ROW_OF_3_BOTH_OPEN;
+        score += boardFeatures[9] * ROW_OF_4_ONE_OPEN;
+        score += boardFeatures[10] * ROW_OF_4_BOTH_OPEN;
+
+        score -= boardFeatures[11] * ROW_OF_3_BOTH_OPEN;
+        score -= boardFeatures[12] * ROW_OF_4_ONE_OPEN;
+        score -= boardFeatures[13] * ROW_OF_4_BOTH_OPEN;
 
         if (DEBUG_LOG) {
             System.out.println("--- BOARD EVALUATION ---");

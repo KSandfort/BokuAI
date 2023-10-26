@@ -325,6 +325,23 @@ public class BoardState {
         return new int[]{index1d / 10, index1d % 10};
     }
 
+    public boolean isArraySubstring(int[] a, int[] row) {
+        String aStr = "";
+        String rowStr = "";
+        for (int i : a) {
+            aStr += i;
+        }
+        for (int i : row) {
+            rowStr += i;
+        }
+        if (rowStr.contains(aStr)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     public int[] getBoardFeatures() {
         int[] result = new int[14];
         // 0 = Own player rows of 2
@@ -333,350 +350,353 @@ public class BoardState {
         // 3 = Opp player rows of 3
         // 4 = Own player rows of 4
         // 5 = Opp player rows of 4
-        // 6 = Own player maximum tiles in unblocked row
-        // 7 = Opp player maximum tiles in unblocked row
-        // 8 = Own player possible captures
-        // 9 = Opp player possible captures
+        // 6 = Own player possible captures
+        // 7 = Opp player possible captures
 
-        int countOwn = 0;
-        int countOpp = 0;
+        // 8 = White rows of 3 both open
+        // 9 = White rows of 4 one open
+        // 10 = White rows of 4 both open
 
-        int maxCountOwn = 0;
-        int maxCountOpp = 0;
+        // 11 = White rows of 3 both open
+        // 12 = White rows of 4 one open
+        // 13 = White rows of 4 both open
 
-        int unblockedOwn = 0;
-        int unblockedOpp = 0;
-        int tilesInUnblockedOwn = 0;
-        int tilesInUnblockedOpp = 0;
-        int maxTilesInUnblockedOwn = 0;
-        int maxTilesInUnblockedOpp = 0;
+        int countWhite;
+        int countBlack;
+        int maxCountWhite;
+        int maxCountBlack;
+
+        int[] w3bothOpen = new int[]{0, 1, 1, 1, 0};
+        int[] w4openStart = new int[]{0, 1, 1, 1, 1};
+        int[] w4openEnd = new int[]{1, 1, 1, 1, 0};
+        int[] w4bothOpen = new int[]{0, 1, 1, 1, 0};
+
+        int[] b3bothOpen = new int[]{0, -1, -1, -1, 0};
+        int[] b4openStart = new int[]{0, -1, -1, -1, -1};
+        int[] b4openEnd = new int[]{-1, -1, -1, -1, 0};
+        int[] b4bothOpen = new int[]{0, -1, -1, -1, 0};
 
         // First diagonal
         for (int i = 0; i < 10; i++) { // For each column
-            countOwn = 0;
-            countOpp = 0;
+            countWhite = 0;
+            countBlack = 0;
+            maxCountWhite = 0;
+            maxCountBlack = 0;
 
-            maxCountOwn = 0;
-            maxCountOpp = 0;
-
-            unblockedOwn = 0;
-            unblockedOpp = 0;
-            tilesInUnblockedOwn = 0;
-            tilesInUnblockedOpp = 0;
-            maxTilesInUnblockedOwn = 0;
-            maxTilesInUnblockedOpp = 0;
+            int[] rowSequence = new int[10];
 
             for (int j = 0; j < 10; j++) { // For each element within the column
                 if (isCoordinateValid(new int[]{i, j})) { // Check validity of cell
                     int cellCode = this.board[coord2dTo1d(new int[]{i, j})];
+                    rowSequence[j] = cellCode;
                     if (cellCode == 1) {
-                        countOwn += 1;
-                        countOpp = 0;
-                        unblockedOwn += 1;
-                        unblockedOpp = 0;
-                        tilesInUnblockedOwn += 1;
-                        tilesInUnblockedOpp = 0;
+                        countWhite += 1;
+                        countBlack = 0;
                     }
                     if (cellCode == -1) {
-                        countOwn = 0;
-                        countOpp += 1;
-                        unblockedOwn = 0;
-                        unblockedOpp += 1;
-                        tilesInUnblockedOwn = 0;
-                        tilesInUnblockedOpp += 1;
+                        countWhite = 0;
+                        countBlack += 1;
                     }
                     if (cellCode == 0) {
-                        countOwn = 0;
-                        countOpp = 0;
-                        unblockedOwn += 1;
-                        unblockedOpp += 1;
+                        countWhite = 0;
+                        countBlack = 0;
                     }
 
                 }
 
                 // Update maximum counts
-                maxCountOwn = (Math.max(countOwn, maxCountOwn));
-                maxCountOpp = (Math.max(countOpp, maxCountOpp));
-
-                // Update maximum tiles in unblocked row
-                // The purpose of this mechanism is to check if there exists a potential (unblocked) row of length 5
-                if (unblockedOwn >= 5) {
-                    maxTilesInUnblockedOwn = Math.max(maxTilesInUnblockedOwn, tilesInUnblockedOwn);
-                }
-                if (unblockedOpp >= 5) {
-                    maxTilesInUnblockedOpp = Math.max(maxTilesInUnblockedOpp, tilesInUnblockedOpp);
-                }
+                maxCountWhite = (Math.max(countWhite, maxCountWhite));
+                maxCountBlack = (Math.max(countBlack, maxCountBlack));
 
             }
-            if (maxCountOwn == 2) {
+            if (maxCountWhite == 2) {
                 result[0] += 1;
             }
-            if (maxCountOpp == 2) {
+            if (maxCountBlack == 2) {
                 result[1] += 1;
             }
-            if (maxCountOwn == 3) {
+            if (maxCountWhite == 3) {
                 result[2] += 1;
             }
-            if (maxCountOpp == 3) {
+            if (maxCountBlack == 3) {
                 result[3] += 1;
             }
-            if (maxCountOwn == 4) {
+            if (maxCountWhite == 4) {
                 result[4] += 1;
             }
-            if (maxCountOpp == 4) {
+            if (maxCountBlack == 4) {
                 result[5] += 1;
             }
-            result[6] += maxTilesInUnblockedOwn;
-            result[7] += maxTilesInUnblockedOpp;
+
+            if (isArraySubstring(w3bothOpen, rowSequence)) {
+                result[8] += 1;
+            }
+            if (isArraySubstring(w4openStart, rowSequence)) {
+                result[9] += 1;
+            }
+            if (isArraySubstring(w4openEnd, rowSequence)) {
+                result[9] += 1;
+            }
+            if (isArraySubstring(w4bothOpen, rowSequence)) {
+                result[10] += 1;
+            }
+
+            if (isArraySubstring(b3bothOpen, rowSequence)) {
+                result[11] += 1;
+            }
+            if (isArraySubstring(b4openStart, rowSequence)) {
+                result[12] += 1;
+            }
+            if (isArraySubstring(b4openEnd, rowSequence)) {
+                result[12] += 1;
+            }
+            if (isArraySubstring(b4bothOpen, rowSequence)) {
+                result[13] += 1;
+            }
         }
 
         // Second diagonal
         for (int i = 0; i < 10; i++) { // For each column
-            countOwn = 0;
-            countOpp = 0;
+            countWhite = 0;
+            countBlack = 0;
 
-            maxCountOwn = 0;
-            maxCountOpp = 0;
+            maxCountWhite = 0;
+            maxCountBlack = 0;
 
-            unblockedOwn = 0;
-            unblockedOpp = 0;
-            tilesInUnblockedOwn = 0;
-            tilesInUnblockedOpp = 0;
-            maxTilesInUnblockedOwn = 0;
-            maxTilesInUnblockedOpp = 0;
+            int[] rowSequence = new int[10];
 
             for (int j = 0; j < 10; j++) { // For each element within the column
                 if (isCoordinateValid(new int[]{j, i})) { // Check validity of cell
                     int cellCode = this.board[coord2dTo1d(new int[]{j, i})];
+                    rowSequence[j] = cellCode;
                     if (cellCode == 1) {
-                        countOwn += 1;
-                        countOpp = 0;
-                        unblockedOwn += 1;
-                        unblockedOpp = 0;
-                        tilesInUnblockedOwn += 1;
-                        tilesInUnblockedOpp = 0;
+                        countWhite += 1;
+                        countBlack = 0;
                     }
                     if (cellCode == -1) {
-                        countOwn = 0;
-                        countOpp += 1;
-                        unblockedOwn = 0;
-                        unblockedOpp += 1;
-                        tilesInUnblockedOwn = 0;
-                        tilesInUnblockedOpp += 1;
+                        countWhite = 0;
+                        countBlack += 1;
                     }
                     if (cellCode == 0) {
-                        countOwn = 0;
-                        countOpp = 0;
-                        unblockedOwn += 1;
-                        unblockedOpp += 1;
+                        countWhite = 0;
+                        countBlack = 0;
                     }
 
                 }
 
                 // Update maximum counts
-                maxCountOwn = (Math.max(countOwn, maxCountOwn));
-                maxCountOpp = (Math.max(countOpp, maxCountOpp));
-
-                // Update maximum tiles in unblocked row
-                // The purpose of this mechanism is to check if there exists a potential (unblocked) row of length 5
-                if (unblockedOwn >= 5) {
-                    maxTilesInUnblockedOwn = Math.max(maxTilesInUnblockedOwn, tilesInUnblockedOwn);
-                }
-                if (unblockedOpp >= 5) {
-                    maxTilesInUnblockedOpp = Math.max(maxTilesInUnblockedOpp, tilesInUnblockedOpp);
-                }
+                maxCountWhite = (Math.max(countWhite, maxCountWhite));
+                maxCountBlack = (Math.max(countBlack, maxCountBlack));
 
             }
-            if (maxCountOwn == 2) {
+            if (maxCountWhite == 2) {
                 result[0] += 1;
             }
-            if (maxCountOpp == 2) {
+            if (maxCountBlack == 2) {
                 result[1] += 1;
             }
-            if (maxCountOwn == 3) {
+            if (maxCountWhite == 3) {
                 result[2] += 1;
             }
-            if (maxCountOpp == 3) {
+            if (maxCountBlack == 3) {
                 result[3] += 1;
             }
-            if (maxCountOwn == 4) {
+            if (maxCountWhite == 4) {
                 result[4] += 1;
             }
-            if (maxCountOpp == 4) {
+            if (maxCountBlack == 4) {
                 result[5] += 1;
             }
-            result[6] += maxTilesInUnblockedOwn;
-            result[7] += maxTilesInUnblockedOpp;
+
+            if (isArraySubstring(w3bothOpen, rowSequence)) {
+                result[8] += 1;
+            }
+            if (isArraySubstring(w4openStart, rowSequence)) {
+                result[9] += 1;
+            }
+            if (isArraySubstring(w4openEnd, rowSequence)) {
+                result[9] += 1;
+            }
+            if (isArraySubstring(w4bothOpen, rowSequence)) {
+                result[10] += 1;
+            }
+
+            if (isArraySubstring(b3bothOpen, rowSequence)) {
+                result[11] += 1;
+            }
+            if (isArraySubstring(b4openStart, rowSequence)) {
+                result[12] += 1;
+            }
+            if (isArraySubstring(b4openEnd, rowSequence)) {
+                result[12] += 1;
+            }
+            if (isArraySubstring(b4bothOpen, rowSequence)) {
+                result[13] += 1;
+            }
         }
 
         // Vertical
         // Left Side
         for (int i = 0; i < 7; i++) { // For each column
-            countOwn = 0;
-            countOpp = 0;
+            countWhite = 0;
+            countBlack = 0;
 
-            maxCountOwn = 0;
-            maxCountOpp = 0;
+            maxCountWhite = 0;
+            maxCountBlack = 0;
 
-            unblockedOwn = 0;
-            unblockedOpp = 0;
-            tilesInUnblockedOwn = 0;
-            tilesInUnblockedOpp = 0;
-            maxTilesInUnblockedOwn = 0;
-            maxTilesInUnblockedOpp = 0;
+            int[] rowSequence = new int[10];
 
             for (int j = 0; j < 10; j++) { // For each element within the column
                 if (isCoordinateValid(new int[]{i + j, j})) { // Check validity of cell
                     int cellCode = this.board[coord2dTo1d(new int[]{i + j, j})];
+                    rowSequence[j] = cellCode;
                     if (cellCode == 1) {
-                        countOwn += 1;
-                        countOpp = 0;
-                        unblockedOwn += 1;
-                        unblockedOpp = 0;
-                        tilesInUnblockedOwn += 1;
-                        tilesInUnblockedOpp = 0;
+                        countWhite += 1;
+                        countBlack = 0;
                     }
                     if (cellCode == -1) {
-                        countOwn = 0;
-                        countOpp += 1;
-                        unblockedOwn = 0;
-                        unblockedOpp += 1;
-                        tilesInUnblockedOwn = 0;
-                        tilesInUnblockedOpp += 1;
+                        countWhite = 0;
+                        countBlack += 1;
                     }
                     if (cellCode == 0) {
-                        countOwn = 0;
-                        countOpp = 0;
-                        unblockedOwn += 1;
-                        unblockedOpp += 1;
+                        countWhite = 0;
+                        countBlack = 0;
                     }
 
                 }
 
                 // Update maximum counts
-                maxCountOwn = (Math.max(countOwn, maxCountOwn));
-                maxCountOpp = (Math.max(countOpp, maxCountOpp));
-
-                // Update maximum tiles in unblocked row
-                // The purpose of this mechanism is to check if there exists a potential (unblocked) row of length 5
-                if (unblockedOwn >= 5) {
-                    maxTilesInUnblockedOwn = Math.max(maxTilesInUnblockedOwn, tilesInUnblockedOwn);
-                }
-                if (unblockedOpp >= 5) {
-                    maxTilesInUnblockedOpp = Math.max(maxTilesInUnblockedOpp, tilesInUnblockedOpp);
-                }
+                maxCountWhite = (Math.max(countWhite, maxCountWhite));
+                maxCountBlack = (Math.max(countBlack, maxCountBlack));
 
             }
-            if (maxCountOwn == 2) {
+            if (maxCountWhite == 2) {
                 result[0] += 1;
             }
-            if (maxCountOpp == 2) {
+            if (maxCountBlack == 2) {
                 result[1] += 1;
             }
-            if (maxCountOwn == 3) {
+            if (maxCountWhite == 3) {
                 result[2] += 1;
             }
-            if (maxCountOpp == 3) {
+            if (maxCountBlack == 3) {
                 result[3] += 1;
             }
-            if (maxCountOwn == 4) {
+            if (maxCountWhite == 4) {
                 result[4] += 1;
             }
-            if (maxCountOpp == 4) {
+            if (maxCountBlack == 4) {
                 result[5] += 1;
             }
-            result[6] += maxTilesInUnblockedOwn;
-            result[7] += maxTilesInUnblockedOpp;
+
+            if (isArraySubstring(w3bothOpen, rowSequence)) {
+                result[8] += 1;
+            }
+            if (isArraySubstring(w4openStart, rowSequence)) {
+                result[9] += 1;
+            }
+            if (isArraySubstring(w4openEnd, rowSequence)) {
+                result[9] += 1;
+            }
+            if (isArraySubstring(w4bothOpen, rowSequence)) {
+                result[10] += 1;
+            }
+
+            if (isArraySubstring(b3bothOpen, rowSequence)) {
+                result[11] += 1;
+            }
+            if (isArraySubstring(b4openStart, rowSequence)) {
+                result[12] += 1;
+            }
+            if (isArraySubstring(b4openEnd, rowSequence)) {
+                result[12] += 1;
+            }
+            if (isArraySubstring(b4bothOpen, rowSequence)) {
+                result[13] += 1;
+            }
         }
 
         // Right side
         for (int i = 1; i < 7; i++) { // For each column
-            countOwn = 0;
-            countOpp = 0;
+            countWhite = 0;
+            countBlack = 0;
+            maxCountWhite = 0;
+            maxCountBlack = 0;
 
-            maxCountOwn = 0;
-            maxCountOpp = 0;
-
-            unblockedOwn = 0;
-            unblockedOpp = 0;
-            tilesInUnblockedOwn = 0;
-            tilesInUnblockedOpp = 0;
-            maxTilesInUnblockedOwn = 0;
-            maxTilesInUnblockedOpp = 0;
+            int[] rowSequence = new int[10];
 
             for (int j = 0; j < 10; j++) { // For each element within the column
                 if (isCoordinateValid(new int[]{j, i + j})) { // Check validity of cell
                     int cellCode = this.board[coord2dTo1d(new int[]{j, i + j})];
+                    rowSequence[j] = cellCode;
                     if (cellCode == 1) {
-                        countOwn += 1;
-                        countOpp = 0;
-                        unblockedOwn += 1;
-                        unblockedOpp = 0;
-                        tilesInUnblockedOwn += 1;
-                        tilesInUnblockedOpp = 0;
+                        countWhite += 1;
+                        countBlack = 0;
                     }
                     if (cellCode == -1) {
-                        countOwn = 0;
-                        countOpp += 1;
-                        unblockedOwn = 0;
-                        unblockedOpp += 1;
-                        tilesInUnblockedOwn = 0;
-                        tilesInUnblockedOpp += 1;
+                        countWhite = 0;
+                        countBlack += 1;
                     }
                     if (cellCode == 0) {
-                        countOwn = 0;
-                        countOpp = 0;
-                        unblockedOwn += 1;
-                        unblockedOpp += 1;
+                        countWhite = 0;
+                        countBlack = 0;
                     }
 
                 }
 
                 // Update maximum counts
-                maxCountOwn = (Math.max(countOwn, maxCountOwn));
-                maxCountOpp = (Math.max(countOpp, maxCountOpp));
-
-                // Update maximum tiles in unblocked row
-                // The purpose of this mechanism is to check if there exists a potential (unblocked) row of length 5
-                if (unblockedOwn >= 5) {
-                    maxTilesInUnblockedOwn = Math.max(maxTilesInUnblockedOwn, tilesInUnblockedOwn);
-                }
-                if (unblockedOpp >= 5) {
-                    maxTilesInUnblockedOpp = Math.max(maxTilesInUnblockedOpp, tilesInUnblockedOpp);
-                }
-
+                maxCountWhite = (Math.max(countWhite, maxCountWhite));
+                maxCountBlack = (Math.max(countBlack, maxCountBlack));
             }
-            if (maxCountOwn == 2) {
+            if (maxCountWhite == 2) {
                 result[0] += 1;
             }
-            if (maxCountOpp == 2) {
+            if (maxCountBlack == 2) {
                 result[1] += 1;
             }
-            if (maxCountOwn == 3) {
+            if (maxCountWhite == 3) {
                 result[2] += 1;
             }
-            if (maxCountOpp == 3) {
+            if (maxCountBlack == 3) {
                 result[3] += 1;
             }
-            if (maxCountOwn == 4) {
+            if (maxCountWhite == 4) {
                 result[4] += 1;
             }
-            if (maxCountOpp == 4) {
+            if (maxCountBlack == 4) {
                 result[5] += 1;
             }
-            result[6] += maxTilesInUnblockedOwn;
-            result[7] += maxTilesInUnblockedOpp;
+
+            if (isArraySubstring(w3bothOpen, rowSequence)) {
+                result[8] += 1;
+            }
+            if (isArraySubstring(w4openStart, rowSequence)) {
+                result[9] += 1;
+            }
+            if (isArraySubstring(w4openEnd, rowSequence)) {
+                result[9] += 1;
+            }
+            if (isArraySubstring(w4bothOpen, rowSequence)) {
+                result[10] += 1;
+            }
+
+            if (isArraySubstring(b3bothOpen, rowSequence)) {
+                result[11] += 1;
+            }
+            if (isArraySubstring(b4openStart, rowSequence)) {
+                result[12] += 1;
+            }
+            if (isArraySubstring(b4openEnd, rowSequence)) {
+                result[12] += 1;
+            }
+            if (isArraySubstring(b4bothOpen, rowSequence)) {
+                result[13] += 1;
+            }
         }
 
         // Add scores for pieces to take
-        result[8] = this.possibleCapturesNextMove(1).length;
-        result[9] = this.possibleCapturesNextMove(-1).length;
-
-        return result;
-    }
-
-    private int[] getBoardFeaturesOneDir() {
-        int[] result = new int[14];
+        result[6] = this.possibleCapturesNextMove(1).length;
+        result[7] = this.possibleCapturesNextMove(-1).length;
 
         return result;
     }
