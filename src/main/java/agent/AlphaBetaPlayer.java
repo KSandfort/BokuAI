@@ -19,8 +19,17 @@ public class AlphaBetaPlayer extends Player {
         this.nodesCreatedCount = 0;
         this.nodesEvaluatedCount = 0;
         int[] nextMoveCoordinate = MiniMax(boardState);
-
         this.indexNextPieceToTake = nextMoveCoordinate[1]; // Extract second index (in case of capture)
+
+        // Update Player Statistics
+        if (this.isWhitePlayer) {
+            this.gameController.getPsWhite().setLastMoveIndex(nextMoveCoordinate[0]);
+            this.gameController.getPsWhite().setLastTakeIndex(this.indexNextPieceToTake);
+        }
+        else {
+            this.gameController.getPsBlack().setLastMoveIndex(nextMoveCoordinate[0]);
+            this.gameController.getPsBlack().setLastTakeIndex(this.indexNextPieceToTake);
+        }
         return nextMoveCoordinate[0];
     }
 

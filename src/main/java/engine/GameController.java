@@ -81,9 +81,11 @@ public class GameController {
         appInstance.getBlackPlayerStatsLabel().setText(psBlack.out());
 
         this.player1 = this.getPlayerInstanceByName(player1Selection);
+        player1.gameController = this;
         player1.isWhitePlayer = true;
         this.player2 = this.getPlayerInstanceByName(player2Selection);
         player2.isWhitePlayer = false;
+        player2.gameController = this;
         if (DEBUG_LOG) {
             System.out.println("Starting game");
         }
