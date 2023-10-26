@@ -74,6 +74,7 @@ public class GameController {
         // Agent vs Human
         if (!(this.player1 instanceof HumanPlayer) && this.player2 instanceof HumanPlayer) {
             this.agentVsHuman = true;
+            this.whiteTimer.startLogTime(System.currentTimeMillis());
             this.executeMove(player1.getMove(this.boardState));
         }
 
@@ -82,13 +83,7 @@ public class GameController {
             //gameLoopAgentVsAgent();
         }
 
-        if (this.player1 instanceof HumanPlayer) {
-            this.whiteTimer.startLogTime(System.currentTimeMillis());
-        }
-
-        if (this.player2 instanceof HumanPlayer) {
-            this.blackTimer.startLogTime(System.currentTimeMillis());
-        }
+        this.whiteTimer.startLogTime(System.currentTimeMillis());
 
     }
 
