@@ -12,6 +12,7 @@ public class MoveNode implements Comparable<MoveNode> {
     private BoardState boardState;
     int newTile;
     int captureTile = -1;
+    int moveOrderingPriority = 0; // The higher, the better
 
     public MoveNode(BoardState bs, int nt, int ct) {
         this.boardState = bs;
@@ -30,10 +31,10 @@ public class MoveNode implements Comparable<MoveNode> {
 
     @Override
     public int compareTo(MoveNode o) {
-        if (o.getScore() == this.score) {
+        if (o.getMoveOrderingPriority() == this.moveOrderingPriority) {
             return 0;
         }
-        else if (o.getScore() < this.score){
+        else if (o.getMoveOrderingPriority() < this.moveOrderingPriority){
             return 1;
         }
         else {

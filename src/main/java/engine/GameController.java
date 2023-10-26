@@ -1,7 +1,7 @@
 package engine;
 
 import agent.HumanPlayer;
-import agent.MinimaxPlayer;
+import agent.AlphaBetaPlayer;
 import agent.Player;
 import agent.RandomPlayer;
 import agent.utils.HashUtils;
@@ -330,8 +330,8 @@ public class GameController {
         if (name.equals("Random")) {
             return new RandomPlayer();
         }
-        if (name.equals("Minimax")) {
-            return new MinimaxPlayer();
+        if (name.equals("Alpha Beta")) {
+            return new AlphaBetaPlayer();
         }
         return new HumanPlayer();
     }

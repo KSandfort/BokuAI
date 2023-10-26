@@ -3,19 +3,22 @@ package agent;
 import agent.utils.MoveNode;
 import engine.BoardState;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Hashtable;
 
-public class MinimaxPlayer extends Player {
+public class AlphaBetaPlayer extends Player {
 
     private static final int MAX_SEARCH_DEPTH = 3;
     int indexNextPieceToTake = -1; // Keeps the next piece to take accessible in memory
     int nodesCreatedCount = 0;
     int nodesEvaluatedCount = 0;
+    Hashtable<Integer, MoveNode> transpositionTable = new Hashtable<>();
 
     @Override
     public int getMove(BoardState boardState) {
         this.nodesCreatedCount = 0;
         this.nodesEvaluatedCount = 0;
-        int[] nextMoveCoordinate = MiniMax(boardState, MAX_SEARCH_DEPTH);
+        int[] nextMoveCoordinate = MiniMax(boardState);
 
         this.indexNextPieceToTake = nextMoveCoordinate[1]; // Extract second index (in case of capture)
         return nextMoveCoordinate[0];
@@ -39,6 +42,13 @@ public class MinimaxPlayer extends Player {
                     for (int t : piecesToTake) {
                         BoardState takeBoardState = newBoardState.agentPieceCapture(t);
                         MoveNode newMoveNode = new MoveNode(takeBoardState, i, t);
+                        // Update move ordering priority
+                        if (!newBoardState.whiteToMove) {
+                            newMoveNode.setMoveOrderingPriority(10);
+                        }
+                        else {
+                            newMoveNode.setMoveOrderingPriority(-10);
+                        }
                         moveNodes.add(newMoveNode);
                     }
                 }
@@ -52,12 +62,13 @@ public class MinimaxPlayer extends Player {
         return moveNodes;
     }
 
-    private int[] MiniMax(BoardState boardState, int maxDepth) {
+    private int[] MiniMax(BoardState boardState) {
         // Get possible positions, including captures
         ArrayList<MoveNode> moveNodes = getChildNodes(boardState);
+        Collections.sort(moveNodes);
         // Iterate over all possible positions and return max score
         for(MoveNode moveNode : moveNodes) {
-            int score = alphaBeta(moveNode, maxDepth - 1, -1000, 1000, !this.isWhitePlayer); // Start with min
+            int score = alphaBeta(moveNode, MAX_SEARCH_DEPTH - 1, -1000, 1000, !this.isWhitePlayer); // Start with min
             // Assign score to node on internal node below the root node
             moveNode.setScore(score);
         }
@@ -93,14 +104,21 @@ public class MinimaxPlayer extends Player {
         System.out.printf("Nodes Evaluated: %d\n", this.nodesEvaluatedCount);
         System.out.println("-----------------");
 
+        System.out.println("TRANSPOSITION TABLE SIZE: " + transpositionTable.size());
         return new int[]{index0Value, index1Value};
     }
 
     private int alphaBeta(MoveNode moveNode, int depth, int alpha, int beta, boolean maximizingPlayer) {
         // If max search depth is reached
         if (depth <= 0) {
-            moveNode.heuristicEvaluation();
-            nodesEvaluatedCount += 1;
+            if (transpositionTable.contains(moveNode.getBoardState().getBoardHash())) {
+                return transpositionTable.get(moveNode.getBoardState().getBoardHash()).getScore();
+            }
+            else {
+                moveNode.heuristicEvaluation();
+                nodesEvaluatedCount += 1;
+                transpositionTable.put(moveNode.getBoardState().getBoardHash(), moveNode);
+            }
             return moveNode.getScore();
         }
         // If node is terminal
@@ -115,6 +133,7 @@ public class MinimaxPlayer extends Player {
 
         // Create list of all child nodes (without evaluation)
         ArrayList<MoveNode> childNodes = getChildNodes(moveNode.getBoardState());
+        Collections.sort(childNodes);
 
         if (maximizingPlayer) {
             int bestValue = -100000;
@@ -130,6 +149,7 @@ public class MinimaxPlayer extends Player {
 
         }
         else {
+            System.out.println("At least I tried");
             int bestValue = 100000;
             for (MoveNode child : childNodes) {
                 int value = alphaBeta(child, depth - 1, alpha, beta, true);

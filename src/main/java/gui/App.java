@@ -97,7 +97,7 @@ public class App extends Application {
 
         player1DropDown.getItems().add("Human Player");
         player1DropDown.getItems().add("Random");
-        player1DropDown.getItems().add("Minimax");
+        player1DropDown.getItems().add("Alpha Beta");
         player1DropDown.getSelectionModel().selectFirst();
         player1DropDown.setOnAction((event) -> {
             String selection = player1DropDown.getSelectionModel().getSelectedItem();
@@ -109,7 +109,7 @@ public class App extends Application {
 
         player2DropDown.getItems().add("Human Player");
         player2DropDown.getItems().add("Random");
-        player2DropDown.getItems().add("Minimax");
+        player2DropDown.getItems().add("Alpha Beta");
         player2DropDown.getSelectionModel().selectFirst();
         player2DropDown.setOnAction((event) -> {
             String selection = player2DropDown.getSelectionModel().getSelectedItem();

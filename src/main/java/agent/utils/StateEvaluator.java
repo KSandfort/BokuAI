@@ -2,19 +2,22 @@ package agent.utils;
 
 import engine.BoardState;
 
+import java.util.Random;
+
 public class StateEvaluator {
     //Todo: Add multiple evaluation methods that can be called
 
     private static final boolean DEBUG_LOG = false;
+    private static final int RAND_SPREAD = 20;
 
     // Feature weights
     private static final int BOUND = 100000;
-    private static final int PIECE_COUNT = 200;
-    private static final int ROW_OF_2 = 20;
+    private static final int PIECE_COUNT = 30;
+    private static final int ROW_OF_2 = 10;
     private static final int ROW_OF_3 = 100;
-    private static final int ROW_OF_4 = 200;
-    private static final int MAX_TILES_IN_UNBLOCKED_ROW = 40;
-    private static final int CAPTURE_POSSIBLE = 50;
+    private static final int ROW_OF_4 = 500;
+    private static final int MAX_TILES_IN_UNBLOCKED_ROW = 30;
+    private static final int CAPTURE_POSSIBLE = 100;
 
     public static int evaluate_v1(BoardState boardState) {
 
@@ -70,7 +73,7 @@ public class StateEvaluator {
             System.out.printf("Total Score: %d \n", score);
             System.out.println("-------------------------");
         }
-
-        return score;
+        int rand = (int) (Math.random() * (RAND_SPREAD * 2) - RAND_SPREAD);
+        return score + rand;
     }
 }

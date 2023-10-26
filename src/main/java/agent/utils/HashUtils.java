@@ -21,7 +21,7 @@ public class HashUtils {
     }
 
     public static int getRandomNumber(boolean whitePlayer, int placedPieceCoordinate, int takenPieceCoordinate) {
-        int index = placedPieceCoordinate * takenPieceCoordinate;
+        int index = (placedPieceCoordinate * 100) + takenPieceCoordinate;
         if (!whitePlayer) {
             index+= 10000;
         }

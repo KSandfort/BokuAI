@@ -38,7 +38,7 @@ public class BoardState {
         }
         // Place the piece on the board
         this.board[positionIndex] = playerValue;
-        this.boardHash = HashUtils.getHash(oldBoard.boardHash, whiteMove, positionIndex, 0);
+        this.boardHash = HashUtils.getHash(this.boardHash, whiteMove, positionIndex, 0);
     }
 
     public BoardState(BoardState oldBoard, boolean whiteMove) {
