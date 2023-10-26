@@ -25,10 +25,18 @@ public class AlphaBetaPlayer extends Player {
         if (this.isWhitePlayer) {
             this.gameController.getPsWhite().setLastMoveIndex(nextMoveCoordinate[0]);
             this.gameController.getPsWhite().setLastTakeIndex(this.indexNextPieceToTake);
+            this.gameController.getPsWhite().setNodesCreated(this.nodesCreatedCount);
+            this.gameController.getPsWhite().setTotalNodesCreated(this.gameController.getPsWhite().getTotalNodesCreated() + this.nodesCreatedCount);
+            this.gameController.getPsWhite().setNodesEvaluated(this.nodesEvaluatedCount);
+            this.gameController.getPsWhite().setTotalNodesEvaluated(this.gameController.getPsWhite().getTotalNodesEvaluated() + this.nodesEvaluatedCount);
         }
         else {
             this.gameController.getPsBlack().setLastMoveIndex(nextMoveCoordinate[0]);
             this.gameController.getPsBlack().setLastTakeIndex(this.indexNextPieceToTake);
+            this.gameController.getPsBlack().setNodesCreated(this.nodesCreatedCount);
+            this.gameController.getPsBlack().setTotalNodesCreated(this.gameController.getPsBlack().getTotalNodesCreated() + this.nodesCreatedCount);
+            this.gameController.getPsBlack().setNodesEvaluated(this.nodesEvaluatedCount);
+            this.gameController.getPsBlack().setTotalNodesEvaluated(this.gameController.getPsBlack().getTotalNodesEvaluated() + this.nodesEvaluatedCount);
         }
         return nextMoveCoordinate[0];
     }
