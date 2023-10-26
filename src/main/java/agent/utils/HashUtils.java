@@ -1,7 +1,5 @@
 package agent.utils;
 
-import engine.BoardState;
-
 import java.util.Random;
 
 public class HashUtils {
@@ -15,12 +13,6 @@ public class HashUtils {
             randomNumbers[i] = rand.nextInt();
         }
     }
-
-    /*
-    public static int getHash(int oldHash, boolean whitePlayer, int placedPieceCoordinate, int takenPieceCoordinate) {
-        return oldHash ^ getRandomNumber(whitePlayer, placedPieceCoordinate, takenPieceCoordinate);
-    }
-    */
 
     public static int getHash(MoveNode moveNode) {
         int hashSum = 0;

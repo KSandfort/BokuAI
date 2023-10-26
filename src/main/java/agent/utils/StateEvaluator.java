@@ -8,16 +8,16 @@ public class StateEvaluator {
     //Todo: Add multiple evaluation methods that can be called
 
     private static final boolean DEBUG_LOG = false;
-    private static final int RAND_SPREAD = 20;
+    private static final int RAND_SPREAD = 10;
 
     // Feature weights
     private static final int BOUND = 100000;
     private static final int PIECE_COUNT = 30;
     private static final int ROW_OF_2 = 10;
-    private static final int ROW_OF_3 = 100;
-    private static final int ROW_OF_4 = 500;
-    private static final int MAX_TILES_IN_UNBLOCKED_ROW = 30;
-    private static final int CAPTURE_POSSIBLE = 100;
+    private static final int ROW_OF_3 = 200;
+    private static final int ROW_OF_4 = 1000;
+    private static final int MAX_TILES_IN_UNBLOCKED_ROW = 10;
+    private static final int CAPTURE_POSSIBLE = 30;
 
     public static int evaluate_v1(BoardState boardState) {
 
@@ -58,8 +58,8 @@ public class StateEvaluator {
         score -= boardFeatures[3] * ROW_OF_3; // Opp player rows of 3
         score += boardFeatures[4] * ROW_OF_4; // Own player rows of 4
         score -= boardFeatures[5] * ROW_OF_4; // Opp player rows of 4
-        score += boardFeatures[6] * MAX_TILES_IN_UNBLOCKED_ROW; // Own player maximum number of tiles in unblocked row
-        score -= boardFeatures[7] * MAX_TILES_IN_UNBLOCKED_ROW; // Opp player maximum number of tiles in unblocked row
+        //score += boardFeatures[6] * MAX_TILES_IN_UNBLOCKED_ROW; // Own player maximum number of tiles in unblocked row
+        //score -= boardFeatures[7] * MAX_TILES_IN_UNBLOCKED_ROW; // Opp player maximum number of tiles in unblocked row
         score += boardFeatures[8] * CAPTURE_POSSIBLE; // Own player possible captures
         score -= boardFeatures[9] * CAPTURE_POSSIBLE; // Opp player possible captures
 

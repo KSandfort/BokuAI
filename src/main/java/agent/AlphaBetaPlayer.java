@@ -8,7 +8,7 @@ import java.util.Hashtable;
 
 public class AlphaBetaPlayer extends Player {
 
-    private static final int MAX_SEARCH_DEPTH = 4;
+    private static final int MAX_SEARCH_DEPTH = 3;
     int indexNextPieceToTake = -1; // Keeps the next piece to take accessible in memory
     int nodesCreatedCount = 0;
     int nodesEvaluatedCount = 0;
@@ -47,6 +47,7 @@ public class AlphaBetaPlayer extends Player {
             this.gameController.getPsBlack().setTotalNodesEvaluated(this.gameController.getPsBlack().getTotalNodesEvaluated() + this.nodesEvaluatedCount);
             this.gameController.getPsBlack().setTotalPruningCount(this.gameController.getPsBlack().getTotalPruningCount() + this.pruningCount);
             this.gameController.getPsBlack().setTranspositionTableSize(this.transpositionTable.size());
+            this.gameController.getPsBlack().setTranspositionTableLookups(this.ttLookupCount);
         }
         return nextMoveCoordinate[0];
     }
