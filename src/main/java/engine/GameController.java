@@ -4,6 +4,7 @@ import agent.HumanPlayer;
 import agent.MinimaxPlayer;
 import agent.Player;
 import agent.RandomPlayer;
+import agent.utils.HashUtils;
 import agent.utils.TurnTimer;
 import gui.App;
 import gui.BokuBoard;
@@ -39,6 +40,7 @@ public class GameController {
 
     public GameController(App appInstance) {
         this.appInstance = appInstance;
+        HashUtils.init();
         this.gameState = 0;
         this.boardStateHistory = new ArrayList<>();
         // Create new empty board

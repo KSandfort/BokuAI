@@ -2,8 +2,6 @@ package agent;
 
 import agent.utils.MoveNode;
 import engine.BoardState;
-
-import javax.swing.plaf.synth.SynthOptionPaneUI;
 import java.util.ArrayList;
 
 public class MinimaxPlayer extends Player {
@@ -64,7 +62,7 @@ public class MinimaxPlayer extends Player {
             moveNode.setScore(score);
         }
 
-        // Select best move
+        // Select the best move (maximum value for white player, minimum value for black player)
         int maxIndex = 0;
         if (this.isWhitePlayer) {
             int maxScore = -100000;

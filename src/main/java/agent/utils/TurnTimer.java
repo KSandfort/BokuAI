@@ -3,6 +3,10 @@ package agent.utils;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * This class provides a tool to log times of a player's turn.
+ * You can start and stop a certain log time and output the total logged time as a string.
+ */
 @Getter
 @Setter
 public class TurnTimer {
