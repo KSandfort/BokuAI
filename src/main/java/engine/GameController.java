@@ -5,6 +5,7 @@ import agent.AlphaBetaPlayer;
 import agent.Player;
 import agent.RandomPlayer;
 import agent.utils.HashUtils;
+import agent.utils.PlayerStatistics;
 import agent.utils.TurnTimer;
 import gui.App;
 import gui.BokuBoard;
@@ -37,6 +38,8 @@ public class GameController {
     private boolean agentVsHuman = false;
     TurnTimer whiteTimer = new TurnTimer();
     TurnTimer blackTimer = new TurnTimer();
+    PlayerStatistics psWhite;
+    PlayerStatistics psBlack;
 
     public GameController(App appInstance) {
         this.appInstance = appInstance;
@@ -68,6 +71,15 @@ public class GameController {
     public void initNewGame(String player1Selection, String player2Selection) {
         gameState = 1;
         moveCount = 0;
+
+        psWhite = new PlayerStatistics(true);
+        psWhite.setPlayerType(player1Selection);
+        appInstance.getWhitePlayerStatsLabel().setText(psWhite.out());
+
+        psBlack = new PlayerStatistics(false);
+        psBlack.setPlayerType(player2Selection);
+        appInstance.getBlackPlayerStatsLabel().setText(psBlack.out());
+
         this.player1 = this.getPlayerInstanceByName(player1Selection);
         player1.isWhitePlayer = true;
         this.player2 = this.getPlayerInstanceByName(player2Selection);
@@ -259,6 +271,9 @@ public class GameController {
         else if (agentVsHuman && this.gameState == 1) {
             this.executeMove(player1.getMove(this.boardState));
         }
+
+        appInstance.getWhitePlayerStatsLabel().setText(psWhite.out());
+        appInstance.getBlackPlayerStatsLabel().setText(psBlack.out());
     }
 
     /**

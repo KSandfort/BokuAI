@@ -59,6 +59,9 @@ public class App extends Application {
     Label wPlayerTimeElapsedLabel = new Label("00:00");
     Label bPlayerTimeElapsedLabel = new Label("00:00");
     Label whoToTurnLabel = new Label("Game not started yet");
+
+    Label whitePlayerStatsLabel = new Label("White Player Stats");
+    Label blackPlayerStatsLabel = new Label("Black Player Stats");
     VBox statsPanel = new VBox();
 
     public static void main(String[] args) {
@@ -164,6 +167,16 @@ public class App extends Application {
         continueButton.setOnAction(e -> gameController.agentVsAgentOneStep());
 
         // --- Stats Panel Setup ---
+        whitePlayerStatsLabel.setPrefWidth(300);
+        whitePlayerStatsLabel.setFont(Font.font("Roboto", FontWeight.BOLD, 12));
+        whitePlayerStatsLabel.setTextFill(Color.web("0xDDDDDD"));
+
+        blackPlayerStatsLabel.setPrefWidth(300);
+        blackPlayerStatsLabel.setFont(Font.font("Roboto", FontWeight.BOLD, 12));
+        blackPlayerStatsLabel.setTextFill(Color.web("0xDDDDDD"));
+
+        statsPanel.getChildren().add(whitePlayerStatsLabel);
+        statsPanel.getChildren().add(blackPlayerStatsLabel);
         statsPanel.setAlignment(Pos.CENTER);
         statsPanel.setPadding(new Insets(20, 20, 20, 20));
         statsPanel.setSpacing(20);
