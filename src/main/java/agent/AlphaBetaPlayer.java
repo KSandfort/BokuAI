@@ -8,11 +8,12 @@ import java.util.Hashtable;
 
 public class AlphaBetaPlayer extends Player {
 
-    private static final int MAX_SEARCH_DEPTH = 3;
+    private static final int MAX_SEARCH_DEPTH = 4;
     int indexNextPieceToTake = -1; // Keeps the next piece to take accessible in memory
     int nodesCreatedCount = 0;
     int nodesEvaluatedCount = 0;
     int pruningCount = 0;
+    int ttLookupCount = 0;
     Hashtable<Integer, MoveNode> transpositionTable = new Hashtable<>();
 
     @Override
@@ -34,6 +35,7 @@ public class AlphaBetaPlayer extends Player {
             this.gameController.getPsWhite().setTotalNodesEvaluated(this.gameController.getPsWhite().getTotalNodesEvaluated() + this.nodesEvaluatedCount);
             this.gameController.getPsWhite().setTotalPruningCount(this.gameController.getPsWhite().getTotalPruningCount() + this.pruningCount);
             this.gameController.getPsWhite().setTranspositionTableSize(this.transpositionTable.size());
+            this.gameController.getPsWhite().setTranspositionTableLookups(this.ttLookupCount);
         }
         else {
             this.gameController.getPsBlack().setLastMoveIndex(nextMoveCoordinate[0]);
@@ -135,14 +137,15 @@ public class AlphaBetaPlayer extends Player {
     }
 
     private int alphaBeta(MoveNode moveNode, int depth, int alpha, int beta, boolean maximizingPlayer) {
-        if (transpositionTable.containsKey(moveNode.getBoardHash())) {
-            return transpositionTable.get(moveNode.getBoardHash()).getScore();
+        if (transpositionTable.containsKey(moveNode.getBoardState().getBoardHash())) {
+            this.ttLookupCount++;
+            return transpositionTable.get(moveNode.getBoardState().getBoardHash()).getScore();
         }
         // If max search depth is reached
         if (depth <= 0) {
             moveNode.heuristicEvaluation();
             nodesEvaluatedCount += 1;
-            transpositionTable.put(moveNode.getBoardHash(), moveNode);
+            transpositionTable.put(moveNode.getBoardState().getBoardHash(), moveNode);
             return moveNode.getScore();
         }
         // If node is terminal

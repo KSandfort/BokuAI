@@ -13,19 +13,16 @@ public class MoveNode implements Comparable<MoveNode> {
     int newTile;
     int captureTile = -1;
     int moveOrderingPriority = 0; // The higher, the better
-    int boardHash;
 
     public MoveNode(BoardState bs, int nt, int ct) {
         this.boardState = bs;
         this.newTile = nt;
         this.captureTile = ct;
-        this.boardHash = HashUtils.getHash(this);
     }
 
     public MoveNode(BoardState bs, int nt) {
         this.boardState = bs;
         this.newTile = nt;
-        this.boardHash = HashUtils.getHash(this);
     }
 
     public void heuristicEvaluation() {

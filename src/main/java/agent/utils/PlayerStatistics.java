@@ -17,6 +17,7 @@ public class PlayerStatistics {
     int totalNodesEvaluated;
     int totalPruningCount;
     int transpositionTableSize;
+    int transpositionTableLookups;
 
     public PlayerStatistics(boolean white) {
         this.isWhitePlayer = white;
@@ -49,6 +50,7 @@ public class PlayerStatistics {
         output += "Pruning Count: \t" + totalPruningCount + "\n";
         output += "---------------------\n";
         output += "TT Size: \t" + this.transpositionTableSize + "\n";
+        output += "TT Lookups: \t" + this.transpositionTableLookups + "\n";
         return output;
     }
 }

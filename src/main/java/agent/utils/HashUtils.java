@@ -36,6 +36,10 @@ public class HashUtils {
         return hashSum;
     }
 
+    public static int xor(int oldHash, boolean whitePlayer, int positionIndex) {
+        return oldHash ^ getRandomNumber(whitePlayer, positionIndex);
+    }
+
     public static int getRandomNumber(boolean whitePlayer, int pieceIndex) {
         int index = pieceIndex;
         if (!whitePlayer) {
