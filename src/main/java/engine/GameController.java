@@ -153,6 +153,12 @@ public class GameController {
             System.out.printf("Index of attempted move: %s\n", coordinateIndex);
         }
         if (!rejectMove) {
+            if (this.gameState == 1) {
+                psWhite.setLastMoveIndex(coordinateIndex);
+            }
+            else {
+                psBlack.setLastMoveIndex(coordinateIndex);
+            }
             executeMove(coordinateIndex);
         }
     }
@@ -241,11 +247,15 @@ public class GameController {
             }
             else {
                 if (this.gameState == 5) {
-                    removePiece(player1.getPieceToTake(piecesToTake));
+                    int toTake = player1.getPieceToTake(piecesToTake);
+                    removePiece(toTake);
+                    psWhite.setLastTakeIndex(toTake);
                     this.gameState = 1;
                 }
                 else {
-                    removePiece(player2.getPieceToTake(piecesToTake));
+                    int toTake = player2.getPieceToTake(piecesToTake);
+                    removePiece(toTake);
+                    psBlack.setLastTakeIndex(toTake);
                     this.gameState = 2;
                 }
             }
