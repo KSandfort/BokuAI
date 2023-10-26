@@ -49,6 +49,17 @@ public class GameController {
         this.boardStateHistory.add(boardState);
     }
 
+    public void resetGame() {
+        HashUtils.init();
+        this.gameState = 0;
+        this.boardStateHistory = new ArrayList<>();
+        this.boardState = new BoardState();
+        this.boardStateHistory.add(boardState);
+        bokuBoard.updateGUI(boardState);
+        whiteTimer = new TurnTimer();
+        blackTimer = new TurnTimer();
+    }
+
     /**
      * Initialises a new game.
      * @param player1Selection player 1 type name

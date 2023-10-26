@@ -1,7 +1,6 @@
 package gui;
 
 import engine.GameController;
-import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -10,6 +9,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,7 +37,8 @@ public class App extends Application {
     final int windowHeight = 800;
     final int boardWidth = 500;
     final int boardHeight = 500;
-    final int FPS = 25;
+    final int buttonWidth = 300;
+    final int buttonHeight = 50;
 
     String player1Selection = "Human Player";
     String player2Selection = "Human Player";
@@ -47,10 +50,10 @@ public class App extends Application {
     Label player2Label = new Label("Player 2:");
     ComboBox<String> player1DropDown = new ComboBox<>();
     ComboBox<String> player2DropDown = new ComboBox<>();
-    Button startPauseButton = new Button("Start Game");
+    Button startButton = new Button("Start Game");
     Button resetButton = new Button("Reset Game");
     Button undoMoveButton = new Button("Undo Last Move");
-    Button continueButton = new Button("Continue (Agent vs Agent");
+    Button continueButton = new Button("Continue (Agent vs Agent)");
 
     HBox infoPanel = new HBox();
     Label wPlayerTimeElapsedLabel = new Label("00:00");
@@ -80,6 +83,15 @@ public class App extends Application {
         infoPanel.setPadding(new Insets(20, 20, 20, 20));
         infoPanel.setSpacing(20);
 
+        whoToTurnLabel.setFont(Font.font("Roboto", FontWeight.BOLD, 24));
+        whoToTurnLabel.setTextFill(Color.web("0xF58800"));
+
+        wPlayerTimeElapsedLabel.setFont(Font.font("Roboto", FontWeight.BOLD, 24));
+        wPlayerTimeElapsedLabel.setTextFill(Color.web("0xDDDDDD"));
+
+        bPlayerTimeElapsedLabel.setFont(Font.font("Roboto", FontWeight.BOLD, 24));
+        bPlayerTimeElapsedLabel.setTextFill(Color.web("0xDDDDDD"));
+
         infoPanel.getChildren().add(wPlayerTimeElapsedLabel);
         infoPanel.getChildren().add(whoToTurnLabel);
         infoPanel.getChildren().add(bPlayerTimeElapsedLabel);
@@ -90,6 +102,13 @@ public class App extends Application {
         controlPanel.setSpacing(20);
 
         // Dropdown Menus
+
+        player1Label.setFont(Font.font("Roboto", FontWeight.BOLD, 24));
+        player1Label.setTextFill(Color.web("0xDDDDDD"));
+
+        player2Label.setFont(Font.font("Roboto", FontWeight.BOLD, 24));
+        player2Label.setTextFill(Color.web("0xDDDDDD"));
+
         controlPanel.getChildren().add(player1Label);
         controlPanel.getChildren().add(player1DropDown);
         controlPanel.getChildren().add(player2Label);
@@ -119,15 +138,29 @@ public class App extends Application {
             }
         });
 
-        controlPanel.getChildren().add(startPauseButton);
+        controlPanel.getChildren().add(startButton);
         controlPanel.getChildren().add(resetButton);
         controlPanel.getChildren().add(undoMoveButton);
         controlPanel.getChildren().add(continueButton);
 
-        startPauseButton.setOnAction(e -> gameController.initNewGame(player1Selection, player2Selection));
+        startButton.setPrefWidth(buttonWidth);
+        startButton.setPrefHeight(buttonHeight);
+        startButton.setFont(Font.font("Roboto", FontWeight.BOLD, 24));
+        startButton.setOnAction(e -> gameController.initNewGame(player1Selection, player2Selection));
 
+        undoMoveButton.setPrefWidth(buttonWidth);
+        undoMoveButton.setPrefHeight(buttonHeight);
+        undoMoveButton.setFont(Font.font("Roboto", FontWeight.BOLD, 24));
         undoMoveButton.setOnAction(e -> gameController.undoSingleMove());
 
+        resetButton.setPrefWidth(buttonWidth);
+        resetButton.setPrefHeight(buttonHeight);
+        resetButton.setFont(Font.font("Roboto", FontWeight.BOLD, 24));
+        resetButton.setOnAction(e -> gameController.resetGame());
+
+        continueButton.setPrefWidth(buttonWidth);
+        continueButton.setPrefHeight(buttonHeight);
+        continueButton.setFont(Font.font("Roboto", FontWeight.BOLD, 18));
         continueButton.setOnAction(e -> gameController.agentVsAgentOneStep());
 
         // --- Stats Panel Setup ---
@@ -141,6 +174,7 @@ public class App extends Application {
         root.setLeft(controlPanel);
         root.setRight(statsPanel);
 
+        root.setStyle("-fx-background-color:#051821;");
         primaryStage.setScene(new Scene(root, windowWidth, windowHeight));
 
         primaryStage.show();

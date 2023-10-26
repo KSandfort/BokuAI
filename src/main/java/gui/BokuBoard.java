@@ -3,7 +3,7 @@ package gui;
 import engine.BoardState;
 import engine.GameController;
 import javafx.scene.Node;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,7 +30,7 @@ public class BokuBoard extends Pane {
         // Assign current game controller
         this.gameController = gameController;
         middle = width/2;
-        this.setStyle("-fx-background-color: blue");
+        this.setStyle("-fx-background-color:#1A4645; -fx-border-radius: 20;");
         placeHexagons();
     }
 
@@ -44,7 +44,7 @@ public class BokuBoard extends Pane {
                             20,
                             (j*10) + i);
                     // Change style on hover
-                    hs.setOnMouseEntered(e -> hs.setFill(Color.RED));
+                    hs.setOnMouseEntered(e -> hs.setFill(Color.web("0xF58800")));
                     hs.setOnMouseExited(e -> hs.setFill(hs.getBaseColour()));
                     hs.setOnMouseClicked(e -> {
                         try {
