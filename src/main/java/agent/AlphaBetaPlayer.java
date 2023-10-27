@@ -138,15 +138,15 @@ public class AlphaBetaPlayer extends Player {
     }
 
     private int alphaBeta(MoveNode moveNode, int depth, int alpha, int beta, boolean maximizingPlayer) {
-        if (transpositionTable.containsKey(moveNode.getBoardState().getBoardHash())) {
-            this.ttLookupCount++;
-            return transpositionTable.get(moveNode.getBoardState().getBoardHash()).getScore();
-        }
+        // if (transpositionTable.containsKey(moveNode.getBoardState().getBoardHash())) {
+        //    this.ttLookupCount++;
+        //    return transpositionTable.get(moveNode.getBoardState().getBoardHash()).getScore();
+        //}
         // If max search depth is reached
         if (depth <= 0) {
             moveNode.heuristicEvaluation();
             nodesEvaluatedCount += 1;
-            transpositionTable.put(moveNode.getBoardState().getBoardHash(), moveNode);
+            //transpositionTable.put(moveNode.getBoardState().getBoardHash(), moveNode);
             return moveNode.getScore();
         }
         // If node is terminal

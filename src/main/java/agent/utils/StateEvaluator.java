@@ -8,10 +8,10 @@ public class StateEvaluator {
     //Todo: Add multiple evaluation methods that can be called
 
     private static final boolean DEBUG_LOG = false;
-    private static final int RAND_SPREAD = 10;
+    private static final int RAND_SPREAD = 20;
 
     // Feature weights
-    private static final int BOUND = 100000;
+    private static final int BOUND = 1000000;
     private static final int PIECE_COUNT = 30;
     private static final int ROW_OF_2 = 10;
     private static final int ROW_OF_3 = 100;
@@ -37,21 +37,21 @@ public class StateEvaluator {
 
         // Init score
         int score = 0;
-        int ownPlayerPieces = 0;
-        int oppPlayerPieces = 0;
+        int whitePlayerPieces = 0;
+        int blackPlayerPieces = 0;
 
         // Get number of pieces for each player
         for (int i = 0; i < boardState.getBoard().length; i++) {
             if (boardState.getBoard()[i] == 1) {
-                ownPlayerPieces += 1;
+                whitePlayerPieces += 1;
             }
             if (boardState.getBoard()[i] == -1) {
-                oppPlayerPieces += 1;
+                blackPlayerPieces += 1;
             }
         }
 
-        score += ownPlayerPieces * PIECE_COUNT;
-        score -= oppPlayerPieces * PIECE_COUNT;
+        score += whitePlayerPieces * PIECE_COUNT;
+        score -= blackPlayerPieces * PIECE_COUNT;
 
         // Obtain all board features in one array
         int[] boardFeatures = boardState.getBoardFeatures();
@@ -76,8 +76,8 @@ public class StateEvaluator {
 
         if (DEBUG_LOG) {
             System.out.println("--- BOARD EVALUATION ---");
-            System.out.printf("Own pieces: %d \n", ownPlayerPieces);
-            System.out.printf("Own pieces: %d \n", oppPlayerPieces);
+            System.out.printf("Own pieces: %d \n", whitePlayerPieces);
+            System.out.printf("Own pieces: %d \n", blackPlayerPieces);
             for (int i = 0; i < boardFeatures.length; i++) {
                 System.out.printf("Board Feature %d: %d \n", i, boardFeatures[i]);
             }
