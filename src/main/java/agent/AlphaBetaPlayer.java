@@ -25,8 +25,14 @@ public class AlphaBetaPlayer extends Player {
         this.indexNextPieceToTake = nextMoveCoordinate[1]; // Extract second index (in case of capture)
 
         // Update Player Statistics
+        this.updatePlayerStatistics(nextMoveCoordinate);
+
+        return nextMoveCoordinate[0];
+    }
+
+    private void updatePlayerStatistics(int[] nextMove) {
         if (this.isWhitePlayer) {
-            this.gameController.getPsWhite().setLastMoveIndex(nextMoveCoordinate[0]);
+            this.gameController.getPsWhite().setLastMoveIndex(nextMove[0]);
             this.gameController.getPsWhite().setLastTakeIndex(this.indexNextPieceToTake);
             this.gameController.getPsWhite().setNodesCreated(this.nodesCreatedCount);
             this.gameController.getPsWhite().setNodesEvaluated(this.nodesEvaluatedCount);
@@ -38,7 +44,7 @@ public class AlphaBetaPlayer extends Player {
             this.gameController.getPsWhite().setTranspositionTableLookups(this.ttLookupCount);
         }
         else {
-            this.gameController.getPsBlack().setLastMoveIndex(nextMoveCoordinate[0]);
+            this.gameController.getPsBlack().setLastMoveIndex(nextMove[0]);
             this.gameController.getPsBlack().setLastTakeIndex(this.indexNextPieceToTake);
             this.gameController.getPsBlack().setNodesCreated(this.nodesCreatedCount);
             this.gameController.getPsBlack().setNodesEvaluated(this.nodesEvaluatedCount);
@@ -49,7 +55,6 @@ public class AlphaBetaPlayer extends Player {
             this.gameController.getPsBlack().setTranspositionTableSize(this.transpositionTable.size());
             this.gameController.getPsBlack().setTranspositionTableLookups(this.ttLookupCount);
         }
-        return nextMoveCoordinate[0];
     }
 
     @Override
@@ -138,15 +143,16 @@ public class AlphaBetaPlayer extends Player {
     }
 
     private int alphaBeta(MoveNode moveNode, int depth, int alpha, int beta, boolean maximizingPlayer) {
-        // if (transpositionTable.containsKey(moveNode.getBoardState().getBoardHash())) {
-        //    this.ttLookupCount++;
-        //    return transpositionTable.get(moveNode.getBoardState().getBoardHash()).getScore();
-        //}
         // If max search depth is reached
         if (depth <= 0) {
+            // Check if position was already evaluated in transposition table
+            if (transpositionTable.containsKey(moveNode.getBoardState().getBoardHash())) {
+                this.ttLookupCount++;
+                return transpositionTable.get(moveNode.getBoardState().getBoardHash()).getScore();
+            }
             moveNode.heuristicEvaluation();
             nodesEvaluatedCount += 1;
-            //transpositionTable.put(moveNode.getBoardState().getBoardHash(), moveNode);
+            transpositionTable.put(moveNode.getBoardState().getBoardHash(), moveNode);
             return moveNode.getScore();
         }
         // If node is terminal
