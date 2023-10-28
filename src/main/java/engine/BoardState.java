@@ -7,12 +7,11 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
-
-@Getter
-@Setter
 /**
  * This class holds an abstract representation of the board state at a given moment during the game.
  */
+@Getter
+@Setter
 public class BoardState {
 
     private int[] board;
@@ -20,12 +19,21 @@ public class BoardState {
     private int blockedCoordinate = -1;
     int boardHash;
 
+    /**
+     * Default constructor
+     */
     public BoardState() {
         this.board = new int[100];
         this.whiteToMove = true;
         this.boardHash = 0;
     }
 
+    /**
+     * Constructor to update an old board state.
+     * @param oldBoard old board state
+     * @param whiteMove flag if white player is to move
+     * @param positionIndex position of the newly placed piece
+     */
     public BoardState(BoardState oldBoard, boolean whiteMove, int positionIndex) {
         this.board = oldBoard.getBoard().clone();
         this.whiteToMove = whiteMove;
@@ -41,6 +49,11 @@ public class BoardState {
         this.boardHash = HashUtils.xor(oldBoard.boardHash, whiteToMove, positionIndex);
     }
 
+    /**
+     * Constructor for a capture transition
+     * @param oldBoard old board state
+     * @param whiteMove flag if white player is to move
+     */
     public BoardState(BoardState oldBoard, boolean whiteMove) {
         this.board = oldBoard.getBoard().clone();
         this.whiteToMove = whiteMove;
@@ -62,6 +75,10 @@ public class BoardState {
         return newBoard;
     }
 
+    /**
+     * Gets all possible moves.
+     * @return position array
+     */
     public int[] getPossibleMoves() {
         ArrayList<Integer> targetList = new ArrayList<>();
         for (int i = 0; i < board.length; i++) {
@@ -72,6 +89,11 @@ public class BoardState {
         return targetList.stream().mapToInt(i -> i).toArray();
     }
 
+    /**
+     * Checks if a game is won
+     * @param whitePlayer white player flag
+     * @return true if game is won
+     */
     public boolean isGameWon(boolean whitePlayer) {
         //TODO: Make more efficient by just checking tiles in a certain distance (direct line) of the piece that is put
         int playerCode;
@@ -304,27 +326,48 @@ public class BoardState {
         return possibleCaptureMoves.stream().mapToInt(i -> i).toArray();
     }
 
-    private boolean isCoordinateValid(int[] coord) {
-        if (coord[0] - coord[1] >= 6) { // LHS cutoff bound
+    /**
+     * Checks if a coordinate is valid.
+     * @param coordinate target coordinate
+     * @return true if it is valid
+     */
+    private boolean isCoordinateValid(int[] coordinate) {
+        if (coordinate[0] - coordinate[1] >= 6) { // LHS cutoff bound
             return false;
         }
-        if (coord[1] - coord[0] >= 6) { // RHS cutoff bound
+        if (coordinate[1] - coordinate[0] >= 6) { // RHS cutoff bound
             return false;
         }
-        if (coord[0] > 9 || coord[0] < 0 || coord[1] > 9 || coord[1] < 0 ) { // Out of coordinate range 0 - 9
+        if (coordinate[0] > 9 || coordinate[0] < 0 || coordinate[1] > 9 || coordinate[1] < 0 ) { // Out of coordinate range 0 - 9
             return false;
         }
         return true;
     }
 
+    /**
+     * Translates a 2d to a 1d coordinate.
+     * @param index2d 2d coordinate
+     * @return 1d coordinate
+     */
     public int coord2dTo1d(int[] index2d) {
         return (index2d[0] * 10) + index2d[1];
     }
 
+    /**
+     * Translates a 1d to a 2d coordinate
+     * @param index1d 1d coordinate
+     * @return 2d coordinate
+     */
     public int[] coord1dTo2d(int index1d) {
         return new int[]{index1d / 10, index1d % 10};
     }
 
+    /**
+     * Checks if array a is a substring sequence of the row array.
+     * @param a substring
+     * @param row target row
+     * @return true if sequence is substring
+     */
     public boolean isArraySubstring(int[] a, int[] row) {
         String aStr = "";
         String rowStr = "";
@@ -342,25 +385,13 @@ public class BoardState {
         }
     }
 
+    /**
+     * Extract features off the board.
+     * Features are used for the heuristic board evaluation.
+     * @return feature vector
+     */
     public int[] getBoardFeatures() {
         int[] result = new int[14];
-        // 0 = Own player rows of 2
-        // 1 = Opp player rows of 2
-        // 2 = Own player rows of 3
-        // 3 = Opp player rows of 3
-        // 4 = Own player rows of 4
-        // 5 = Opp player rows of 4
-        // 6 = Own player possible captures
-        // 7 = Opp player possible captures
-
-        // 8 = White rows of 3 both open
-        // 9 = White rows of 4 one open
-        // 10 = White rows of 4 both open
-
-        // 11 = White rows of 3 both open
-        // 12 = White rows of 4 one open
-        // 13 = White rows of 4 both open
-
         int countWhite;
         int countBlack;
         int maxCountWhite;

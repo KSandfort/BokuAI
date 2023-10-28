@@ -3,6 +3,9 @@ package agent.utils;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Provides statistics that are shown on the right hand side of the game.
+ */
 @Getter
 @Setter
 public class PlayerStatistics {
@@ -19,8 +22,13 @@ public class PlayerStatistics {
     int transpositionTableSize;
     int transpositionTableLookups;
 
-    public PlayerStatistics(boolean white) {
-        this.isWhitePlayer = white;
+
+    /**
+     * Constructor
+     * @param isWhitePlayer true if target player is the white player
+     */
+    public PlayerStatistics(boolean isWhitePlayer) {
+        this.isWhitePlayer = isWhitePlayer;
         this.lastMoveIndex = -1;
         this.lastTakeIndex = -1;
         this.nodesCreated = 0;
@@ -29,6 +37,10 @@ public class PlayerStatistics {
         this.totalNodesEvaluated = 0;
     }
 
+    /**
+     * Converts all instance variables to a string that is displayed in the GUI.
+     * @return formatted string
+     */
     public String out() {
         String output = "";
         if (isWhitePlayer) {

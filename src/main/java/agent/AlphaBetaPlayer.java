@@ -6,21 +6,32 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
 
+/**
+ * This class contains the logic of an AI that uses alpha-beta pruning (MiniMax) along with the following features:
+ * - Transposition Table to avoid time-consuming evaluations of the same state
+ * - Iterative Deepening
+ * - Move Ordering
+ */
 public class AlphaBetaPlayer extends Player {
 
-    private static final int MAX_SEARCH_DEPTH = 10;
     int indexNextPieceToTake = -1; // Keeps the next piece to take accessible in memory
     int nodesCreatedCount = 0;
     int nodesEvaluatedCount = 0;
     int pruningCount = 0;
     int ttLookupCount = 0;
     long searchStartTime;
-    int timeOutMillis = 10000;
+    int timeOutMillis = 10000; // Search timeout in milliseconds
     int currentSearchDepth;
-    boolean terminateSearch = false;
+    boolean terminateSearch = false; // Flag to keep track of whether a search is terminated
 
+    // Transposition Table
     Hashtable<Integer, MoveNode> transpositionTable = new Hashtable<>();
 
+    /**
+     * Fetches a new move from the agent.
+     * @param boardState current board state
+     * @return position of the tile that will be placed
+     */
     @Override
     public int getMove(BoardState boardState) {
         this.nodesCreatedCount = 0;
@@ -28,7 +39,6 @@ public class AlphaBetaPlayer extends Player {
         this.pruningCount = 0;
 
         // Start iterative deepening setup
-
         this.terminateSearch = false;
         this.searchStartTime = System.currentTimeMillis();
         this.currentSearchDepth = 1;
@@ -50,10 +60,13 @@ public class AlphaBetaPlayer extends Player {
 
         // Update Player Statistics
         this.updatePlayerStatistics(bestNextMoveCoordinate);
-
         return bestNextMoveCoordinate[0];
     }
 
+    /**
+     * Updates the player statistics after each move.
+     * @param nextMove array containing the piece that is being placed and (if applicable) the captured tile
+     */
     private void updatePlayerStatistics(int[] nextMove) {
         if (this.isWhitePlayer) {
             this.gameController.getPsWhite().setLastMoveIndex(nextMove[0]);
@@ -81,11 +94,21 @@ public class AlphaBetaPlayer extends Player {
         }
     }
 
+    /**
+     * Fetches the coordinate of a piece that will be taken by the agent.
+     * @param toTake all possible capture positions
+     * @return coordinate of the target piece to take
+     */
     @Override
     public int getPieceToTake(int[] toTake) {
         return this.indexNextPieceToTake;
     }
 
+    /**
+     * Gets all children of a node
+     * @param boardState current board state
+     * @return list of all move node children
+     */
     private ArrayList<MoveNode> getChildNodes(BoardState boardState) {
         ArrayList<MoveNode> moveNodes = new ArrayList<>();
         int[] possibleMoves = boardState.getPossibleMoves();
@@ -120,6 +143,12 @@ public class AlphaBetaPlayer extends Player {
         return moveNodes;
     }
 
+    /**
+     * Executes MiniMax search.
+     * This method is only used to obtain the direct move based off the root.
+     * @param boardState current board state
+     * @return array of the next move and (if applicable) the next piece to capture
+     */
     private int[] MiniMax(BoardState boardState) {
         // Get possible positions, including captures
         ArrayList<MoveNode> moveNodes = getChildNodes(boardState);
@@ -166,6 +195,15 @@ public class AlphaBetaPlayer extends Player {
         return new int[]{index0Value, index1Value};
     }
 
+    /**
+     * Performs the alpha-beta pruning routine.
+     * @param moveNode current move node
+     * @param depth remaining search depth
+     * @param alpha alpha bound
+     * @param beta beta bound
+     * @param maximizingPlayer flag to determine if the current player is the maximizing player
+     * @return position of the optimal move to play
+     */
     private int alphaBeta(MoveNode moveNode, int depth, int alpha, int beta, boolean maximizingPlayer) {
         // Check for timeout
         if (this.searchStartTime + this.timeOutMillis <= System.currentTimeMillis()) {

@@ -5,6 +5,9 @@ import javafx.scene.shape.Polygon;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Hexagon shape for the boku board.
+ */
 @Getter
 @Setter
 public class Hexagon extends Polygon {
@@ -22,6 +25,13 @@ public class Hexagon extends Polygon {
     };
     private Color baseColour;
 
+    /**
+     * Constructor
+     * @param centerX center x coordinate
+     * @param centerY center y coordinate
+     * @param radius hexagon radius
+     * @param coordinateIndex index of the tile
+     */
     public Hexagon(double centerX, double centerY, double radius, int coordinateIndex) {
         super();
         this.coordinateIndex = coordinateIndex;

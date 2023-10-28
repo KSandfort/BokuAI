@@ -16,10 +16,18 @@ public class TurnTimer {
     private long lastStartMillis;
     private long totalMillis;
 
+    /**
+     * Starts to log the time.
+     * @param millis current system milliseconds
+     */
     public void startLogTime(long millis) {
         this.lastStartMillis = millis;
     }
 
+    /**
+     * Stops to log the time.
+     * @param millis current system milliseconds
+     */
     public void stopLogTime(long millis) {
         totalMillis += millis - lastStartMillis;
         int totalSeconds = (int) (totalMillis / 1000);
@@ -27,6 +35,10 @@ public class TurnTimer {
         this.seconds = totalSeconds % 60;
     }
 
+    /**
+     * Creates a string that displays the total logged time in MM:SS.
+     * @return formatted time string
+     */
     public String getTimeLabel() {
         // Format string properly
         String minutesStr;
@@ -43,8 +55,6 @@ public class TurnTimer {
         else {
             secondsStr = Integer.toString(seconds);
         }
-
-
         return minutesStr + ":" + secondsStr;
     }
 

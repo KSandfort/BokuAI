@@ -11,6 +11,9 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Representation of the boku board (GUI)
+ */
 @Getter
 @Setter
 public class BokuBoard extends Pane {
@@ -22,6 +25,12 @@ public class BokuBoard extends Pane {
     List<Hexagon> hexagons = new ArrayList<>();
     private GameController gameController;
 
+    /**
+     * Constructor
+     * @param width board width
+     * @param height board height
+     * @param gameController game controller instance
+     */
     public BokuBoard(double width, double height, GameController gameController) {
         super();
         // Set dimensions
@@ -34,6 +43,9 @@ public class BokuBoard extends Pane {
         placeHexagons();
     }
 
+    /**
+     * Distributes all hexagons on the field.
+     */
     private void placeHexagons() {
         for (int i = 0; i < 10; i++) { // For letter indices (A-J)
             for (int j = 0; j < 10; j++) { // For number indices (1-10)
@@ -60,6 +72,10 @@ public class BokuBoard extends Pane {
         }
     }
 
+    /**
+     * Place markers for capture moves
+     * @param coordinateIndex target index
+     */
     public void placeTakeMarker(int coordinateIndex) {
         int index1 = coordinateIndex / 10;
         int index2 = coordinateIndex % 10;
@@ -73,6 +89,10 @@ public class BokuBoard extends Pane {
         this.getChildren().add(tpi);
     }
 
+    /**
+     * Remove all capture indicators from the board.
+     * @param gameState current game state
+     */
     public void removeAllTakePieceIndicators(int gameState) {
         List<Node> toRemove = new ArrayList<>();
         for (Node n : this.getChildren()) {
@@ -88,6 +108,10 @@ public class BokuBoard extends Pane {
         }
     }
 
+    /**
+     * Refresh the board (GUI)
+     * @param boardState current board state
+     */
     public void updateGUI(BoardState boardState) {
         for (Hexagon hex : this.getHexagons()) {
             int colourCode = boardState.getBoard()[hex.getCoordinateIndex()];

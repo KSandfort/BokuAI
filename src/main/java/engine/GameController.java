@@ -18,6 +18,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * The heart of the backend.
+ */
 @Getter
 @Setter
 public class GameController {
@@ -41,6 +44,10 @@ public class GameController {
     PlayerStatistics psWhite;
     PlayerStatistics psBlack;
 
+    /**
+     * Constructor
+     * @param appInstance instance of the GUI
+     */
     public GameController(App appInstance) {
         this.appInstance = appInstance;
         HashUtils.init();
@@ -52,6 +59,9 @@ public class GameController {
         this.boardStateHistory.add(boardState);
     }
 
+    /**
+     * Resets a game to start with an empty board and a new player selection.
+     */
     public void resetGame() {
         HashUtils.init();
         this.gameState = 0;

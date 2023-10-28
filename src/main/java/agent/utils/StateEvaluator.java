@@ -2,10 +2,7 @@ package agent.utils;
 
 import engine.BoardState;
 
-import java.util.Random;
-
 public class StateEvaluator {
-    //Todo: Add multiple evaluation methods that can be called
 
     private static final boolean DEBUG_LOG = false;
     private static final int RAND_SPREAD = 20;
@@ -61,8 +58,6 @@ public class StateEvaluator {
         score -= boardFeatures[3] * ROW_OF_3; // Opp player rows of 3
         score += boardFeatures[4] * ROW_OF_4; // Own player rows of 4
         score -= boardFeatures[5] * ROW_OF_4; // Opp player rows of 4
-        //score += boardFeatures[6] * MAX_TILES_IN_UNBLOCKED_ROW; // Own player maximum number of tiles in unblocked row
-        //score -= boardFeatures[7] * MAX_TILES_IN_UNBLOCKED_ROW; // Opp player maximum number of tiles in unblocked row
         score += boardFeatures[6] * CAPTURE_POSSIBLE; // Own player possible captures
         score -= boardFeatures[7] * CAPTURE_POSSIBLE; // Opp player possible captures
 

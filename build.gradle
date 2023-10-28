@@ -26,6 +26,18 @@ application {
     mainClass.set("gui.App")
 }
 
+jar {
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+    manifest {
+        attributes "Main-Class": "gui.App"
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+
 test {
     useJUnitPlatform()
 }

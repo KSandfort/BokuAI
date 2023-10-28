@@ -2,11 +2,16 @@ package agent.utils;
 
 import java.util.Random;
 
+/**
+ * Provides utility functions for the hash map that is used for the transposition table in the game.
+ */
 public class HashUtils {
+    public static int nRandom = 200; // Total random numbers
+    public static int[] randomNumbers = new int[nRandom]; // Array to store all random numbers
 
-    public static int nRandom = 200;
-    public static int[] randomNumbers = new int[nRandom];
-
+    /**
+     * Initialize the array containing nRandom numbers.
+     */
     public static void init() {
         Random rand = new Random();
         for (int i = 0; i < randomNumbers.length; i++) {
@@ -14,6 +19,11 @@ public class HashUtils {
         }
     }
 
+    /**
+     * Gets a hash value based on the board state of a move node.
+     * @param moveNode target node
+     * @return hash value
+     */
     public static int getHash(MoveNode moveNode) {
         int hashSum = 0;
         int[] board = moveNode.getBoardState().getBoard();
@@ -28,12 +38,25 @@ public class HashUtils {
         return hashSum;
     }
 
+    /**
+     * Performs an XOR operation between an old hash value and the new piece that is being placed.
+     * @param oldHash old hash value
+     * @param whitePlayer true if white player is the target player
+     * @param positionIndex position index of the piece being placed
+     * @return new hash value
+     */
     public static int xor(int oldHash, boolean whitePlayer, int positionIndex) {
         return oldHash ^ getRandomNumber(whitePlayer, positionIndex);
     }
 
-    public static int getRandomNumber(boolean whitePlayer, int pieceIndex) {
-        int index = pieceIndex;
+    /***
+     * Gets a random number based off the pre-defined array storing all available random numbers.
+     * @param whitePlayer true if white player is the target player
+     * @param positionIndex position index of the piece being placed
+     * @return random number
+     */
+    public static int getRandomNumber(boolean whitePlayer, int positionIndex) {
+        int index = positionIndex;
         if (!whitePlayer) {
             index+= 100;
         }

@@ -64,6 +64,10 @@ public class App extends Application {
     Label blackPlayerStatsLabel = new Label("Black Player Stats");
     VBox statsPanel = new VBox();
 
+    /**
+     * Main method to run the application
+     * @param args args
+     */
     public static void main(String[] args) {
         launch(args);
     }
@@ -105,7 +109,6 @@ public class App extends Application {
         controlPanel.setSpacing(20);
 
         // Dropdown Menus
-
         player1Label.setFont(Font.font("Roboto", FontWeight.BOLD, 24));
         player1Label.setTextFill(Color.web("0xDDDDDD"));
 
