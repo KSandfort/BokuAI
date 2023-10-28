@@ -11,16 +11,16 @@ public class StateEvaluator {
     private static final int RAND_SPREAD = 20;
 
     // Feature weights
-    private static final int BOUND = 1000000;
+    private static final int BOUND = 100000;
     private static final int PIECE_COUNT = 30;
     private static final int ROW_OF_2 = 10;
     private static final int ROW_OF_3 = 100;
-    private static final int ROW_OF_4 = 500;
+    private static final int ROW_OF_4 = 300;
 
     private static final int ROW_OF_3_BOTH_OPEN = 300;
-    private static final int ROW_OF_4_ONE_OPEN = 2000;
+    private static final int ROW_OF_4_ONE_OPEN = 5000;
     private static final int ROW_OF_4_BOTH_OPEN = 10000;
-    private static final int CAPTURE_POSSIBLE = 50;
+    private static final int CAPTURE_POSSIBLE = 200;
 
     public static int evaluate_v1(BoardState boardState) {
 

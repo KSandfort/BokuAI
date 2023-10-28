@@ -8,12 +8,17 @@ import java.util.Hashtable;
 
 public class AlphaBetaPlayer extends Player {
 
-    private static final int MAX_SEARCH_DEPTH = 3;
+    private static final int MAX_SEARCH_DEPTH = 10;
     int indexNextPieceToTake = -1; // Keeps the next piece to take accessible in memory
     int nodesCreatedCount = 0;
     int nodesEvaluatedCount = 0;
     int pruningCount = 0;
     int ttLookupCount = 0;
+    long searchStartTime;
+    int timeOutMillis = 10000;
+    int currentSearchDepth;
+    boolean terminateSearch = false;
+
     Hashtable<Integer, MoveNode> transpositionTable = new Hashtable<>();
 
     @Override
@@ -21,13 +26,32 @@ public class AlphaBetaPlayer extends Player {
         this.nodesCreatedCount = 0;
         this.nodesEvaluatedCount = 0;
         this.pruningCount = 0;
-        int[] nextMoveCoordinate = MiniMax(boardState);
-        this.indexNextPieceToTake = nextMoveCoordinate[1]; // Extract second index (in case of capture)
+
+        // Start iterative deepening setup
+
+        this.terminateSearch = false;
+        this.searchStartTime = System.currentTimeMillis();
+        this.currentSearchDepth = 1;
+        int[] bestNextMoveCoordinate = new int[]{-1, -1}; // Keeps track of the best move for increasing depths.
+
+        while (!terminateSearch) {
+            // Execute search
+            System.out.printf("Search depth: %d\n", this.currentSearchDepth);
+            int[] nextMoveCoordinate = MiniMax(boardState);
+
+            if (!terminateSearch) {
+                // Update best move if no timeout occurred yet
+                bestNextMoveCoordinate = nextMoveCoordinate;
+                this.indexNextPieceToTake = bestNextMoveCoordinate[1]; // Extract second index (in case of capture)
+            }
+
+            this.currentSearchDepth += 1;
+        }
 
         // Update Player Statistics
-        this.updatePlayerStatistics(nextMoveCoordinate);
+        this.updatePlayerStatistics(bestNextMoveCoordinate);
 
-        return nextMoveCoordinate[0];
+        return bestNextMoveCoordinate[0];
     }
 
     private void updatePlayerStatistics(int[] nextMove) {
@@ -102,7 +126,7 @@ public class AlphaBetaPlayer extends Player {
         Collections.sort(moveNodes);
         // Iterate over all possible positions and return max score
         for(MoveNode moveNode : moveNodes) {
-            int score = alphaBeta(moveNode, MAX_SEARCH_DEPTH - 1, -1000, 1000, !this.isWhitePlayer); // Start with min
+            int score = alphaBeta(moveNode, this.currentSearchDepth - 1, -1000, 1000, !this.isWhitePlayer);
             // Assign score to node on internal node below the root node
             moveNode.setScore(score);
         }
@@ -143,6 +167,12 @@ public class AlphaBetaPlayer extends Player {
     }
 
     private int alphaBeta(MoveNode moveNode, int depth, int alpha, int beta, boolean maximizingPlayer) {
+        // Check for timeout
+        if (this.searchStartTime + this.timeOutMillis <= System.currentTimeMillis()) {
+            this.terminateSearch = true;
+            return 0;
+        }
+
         // If max search depth is reached
         if (depth <= 0) {
             // Check if position was already evaluated in transposition table
